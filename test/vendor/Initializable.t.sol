@@ -137,9 +137,9 @@ contract Initializer_Test is CommonTest {
                             maxResourceLimit: 1,
                             elasticityMultiplier: 1,
                             baseFeeMaxChangeDenominator: 2,
-                            minimumBaseFee: 0,
+                            minimumUnstableFee: 0,
                             systemTxMaxGas: 0,
-                            maximumBaseFee: 0
+                            maximumUnstableFee: 0
                         }),
                         address(0),
                         ISystemConfig.Addresses({
@@ -174,9 +174,9 @@ contract Initializer_Test is CommonTest {
                             maxResourceLimit: 1,
                             elasticityMultiplier: 1,
                             baseFeeMaxChangeDenominator: 2,
-                            minimumBaseFee: 0,
+                            minimumUnstableFee: 0,
                             systemTxMaxGas: 0,
-                            maximumBaseFee: 0
+                            maximumUnstableFee: 0
                         }),
                         address(0),
                         ISystemConfig.Addresses({

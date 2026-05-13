@@ -15,7 +15,7 @@ import { Claim, Duration, GameType, GameTypes } from "src/libraries/bridge/Types
 import { IPermissionedDisputeGameV2 } from "interfaces/L1/proofs/v2/IPermissionedDisputeGameV2.sol";
 import { ISP1Verifier } from "interfaces/L1/proofs/zk/ISP1Verifier.sol";
 
-contract DeployOPChain_TestBase is Test, FeatureFlags {
+contract DeployOPChain_TestUnstable is Test, FeatureFlags {
     DeploySuperchain deploySuperchain;
     DeployImplementations deployImplementations;
     DeployOPChain deployOPChain;
@@ -44,7 +44,7 @@ contract DeployOPChain_TestBase is Test, FeatureFlags {
     address challenger = makeAddr("challenger");
     address sp1Verifier = makeAddr("sp1Verifier");
     uint32 basefeeScalar = 100;
-    uint32 blobBaseFeeScalar = 200;
+    uint32 blobUnstableFeeScalar = 200;
     uint256 l2ChainId = 300;
     string saltMixer = "saltMixer";
     uint64 gasLimit = 60_000_000;
@@ -119,7 +119,7 @@ contract DeployOPChain_TestBase is Test, FeatureFlags {
             proposer: proposer,
             challenger: challenger,
             basefeeScalar: basefeeScalar,
-            blobBaseFeeScalar: blobBaseFeeScalar,
+            blobUnstableFeeScalar: blobUnstableFeeScalar,
             l2ChainId: l2ChainId,
             superchainConfigProxy: superchainOutput.superchainConfigProxy,
             implementations: implementations,
@@ -165,7 +165,7 @@ contract DeployOPChain_TestBase is Test, FeatureFlags {
     }
 }
 
-contract DeployOPChain_Test is DeployOPChain_TestBase {
+contract DeployOPChain_Test is DeployOPChain_TestUnstable {
     function hash(bytes32 _seed, uint256 _i) internal pure returns (bytes32) {
         return keccak256(abi.encode(_seed, _i));
     }
@@ -210,7 +210,7 @@ contract DeployOPChain_Test is DeployOPChain_TestBase {
         deployOPChainInput.proposer = address(uint160(uint256(hash(_seed, 4))));
         deployOPChainInput.challenger = address(uint160(uint256(hash(_seed, 5))));
         deployOPChainInput.basefeeScalar = uint32(uint256(hash(_seed, 6)));
-        deployOPChainInput.blobBaseFeeScalar = uint32(uint256(hash(_seed, 7)));
+        deployOPChainInput.blobUnstableFeeScalar = uint32(uint256(hash(_seed, 7)));
         deployOPChainInput.l2ChainId = uint256(hash(_seed, 8));
 
         DeployOPChain.Output memory doo = deployOPChain.run(deployOPChainInput);

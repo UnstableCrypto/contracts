@@ -67,7 +67,7 @@
     "initCodeHash": "0xcdc5bd5fa8ffad76358b8f34a53b8c0cb36540176c31f82d52546373d0bd5245",
     "sourceCodeHash": "0xf90e23a22c2e31d6bb11f9a8a9f7cb1c4eb0f20600d2d9aebf87023d1779972c"
   },
-  "src/L2/BaseFeeVault.sol:BaseFeeVault": {
+  "src/L2/UnstableFeeVault.sol:UnstableFeeVault": {
     "initCodeHash": "0x838bbd7f381e84e21887f72bd1da605bfc4588b3c39aed96cbce67c09335b3ee",
     "sourceCodeHash": "0xcb329746df0baddd3dc03c6c88da5d6bdc0f0a96d30e6dc78d0891bb1e935032"
   },

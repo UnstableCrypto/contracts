@@ -50,7 +50,7 @@ library Predeploys {
     /// @notice Address of the ProxyAdmin predeploy.
     address internal constant PROXY_ADMIN = 0x4200000000000000000000000000000000000018;
 
-    /// @notice Address of the BaseFeeVault predeploy.
+    /// @notice Address of the UnstableFeeVault predeploy.
     address internal constant BASE_FEE_VAULT = 0x4200000000000000000000000000000000000019;
 
     /// @notice Address of the L1FeeVault predeploy.
@@ -86,7 +86,7 @@ library Predeploys {
         if (_addr == L2_TO_L1_MESSAGE_PASSER) return "L2ToL1MessagePasser";
         if (_addr == OPTIMISM_MINTABLE_ERC721_FACTORY) return "OptimismMintableERC721Factory";
         if (_addr == PROXY_ADMIN) return "ProxyAdmin";
-        if (_addr == BASE_FEE_VAULT) return "BaseFeeVault";
+        if (_addr == BASE_FEE_VAULT) return "UnstableFeeVault";
         if (_addr == L1_FEE_VAULT) return "L1FeeVault";
         if (_addr == OPERATOR_FEE_VAULT) return "OperatorFeeVault";
         if (_addr == SCHEMA_REGISTRY) return "SchemaRegistry";

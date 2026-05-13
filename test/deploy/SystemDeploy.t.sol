@@ -255,7 +255,7 @@ contract SystemDeploy_Test is Test, StandardSystemAssertions {
                 challenger: challenger
             }),
             basefeeScalar: 100,
-            blobBasefeeScalar: 200,
+            blobUnstablefeeScalar: 200,
             l2ChainId: l2ChainId,
             startingAnchorRoot: abi.encode(Proposal({ root: Hash.wrap(bytes32(uint256(1))), l2SequenceNumber: 0 })),
             saltMixer: "system-deploy-test",

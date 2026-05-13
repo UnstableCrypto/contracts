@@ -134,7 +134,7 @@
   },
   {
     "bytes": "8",
-    "label": "minBaseFee",
+    "label": "minUnstableFee",
     "offset": 20,
     "slot": "108",
     "type": "uint64"

@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import { Types } from "src/libraries/Types.sol";
 
-interface IBaseFeeVault {
+interface IUnstableFeeVault {
     error FeeVault_OnlyProxyAdminOwner();
 
     error InvalidInitialization();

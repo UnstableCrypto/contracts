@@ -6,12 +6,12 @@ import { CommonTest } from "test/setup/CommonTest.sol";
 import { Constants } from "src/libraries/Constants.sol";
 
 // Contracts
-import { ProxyAdminOwnedBase } from "src/universal/ProxyAdminOwnedBase.sol";
+import { ProxyAdminOwnedUnstable } from "src/universal/ProxyAdminOwnedUnstable.sol";
 
-/// @title ProxyAdminOwnedBase_Harness
-/// @notice Contract implementing the abstract `ProxyAdminOwnedBase` contract so we can write unit
-///         tests for the `ProxyAdminOwnedBase` contract.
-contract ProxyAdminOwnedBase_Harness is ProxyAdminOwnedBase {
+/// @title ProxyAdminOwnedUnstable_Harness
+/// @notice Contract implementing the abstract `ProxyAdminOwnedUnstable` contract so we can write unit
+///         tests for the `ProxyAdminOwnedUnstable` contract.
+contract ProxyAdminOwnedUnstable_Harness is ProxyAdminOwnedUnstable {
     /// @notice Slot 0, used to test ResolvedDelegateProxy behavior.
     mapping(address => string) public slot0;
 
@@ -50,16 +50,16 @@ contract ProxyAdminOwnedBase_Harness is ProxyAdminOwnedBase {
     }
 }
 
-abstract contract ProxyAdminOwnedBase_TestInit is CommonTest {
-    /// @notice Harness for the `ProxyAdminOwnedBase` contract.
-    ProxyAdminOwnedBase_Harness public harness;
+abstract contract ProxyAdminOwnedUnstable_TestInit is CommonTest {
+    /// @notice Harness for the `ProxyAdminOwnedUnstable` contract.
+    ProxyAdminOwnedUnstable_Harness public harness;
 
     /// @notice Sets up the test.
     function setUp() public override {
         super.setUp();
 
         // Create a new harness
-        harness = new ProxyAdminOwnedBase_Harness();
+        harness = new ProxyAdminOwnedUnstable_Harness();
 
         // Set the owner of the harness to the ProxyAdmin contract.
         vm.store(
@@ -68,14 +68,14 @@ abstract contract ProxyAdminOwnedBase_TestInit is CommonTest {
     }
 }
 
-contract ProxyAdminOwnedBase_proxyAdminOwner_Test is ProxyAdminOwnedBase_TestInit {
+contract ProxyAdminOwnedUnstable_proxyAdminOwner_Test is ProxyAdminOwnedUnstable_TestInit {
     /// @notice Tests that the proxyAdminOwner function returns the correct owner.
     function test_proxyAdminOwner_succeeds() public view {
         assertEq(harness.proxyAdminOwner(), proxyAdminOwner);
     }
 }
 
-contract ProxyAdminOwnedBase_proxyAdmin_Test is ProxyAdminOwnedBase_TestInit {
+contract ProxyAdminOwnedUnstable_proxyAdmin_Test is ProxyAdminOwnedUnstable_TestInit {
     /// @notice Tests that the proxyAdmin function returns the correct proxy.
     function test_proxyAdmin_succeeds() public view {
         assertEq(address(harness.proxyAdmin()), address(proxyAdmin));
@@ -111,7 +111,7 @@ contract ProxyAdminOwnedBase_proxyAdmin_Test is ProxyAdminOwnedBase_TestInit {
         harness.setSlot0(address(harness), _slot0Value);
 
         // Expect a revert.
-        vm.expectRevert(ProxyAdminOwnedBase.ProxyAdminOwnedBase_NotResolvedDelegateProxy.selector);
+        vm.expectRevert(ProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotResolvedDelegateProxy.selector);
         harness.proxyAdmin();
     }
 
@@ -127,12 +127,12 @@ contract ProxyAdminOwnedBase_proxyAdmin_Test is ProxyAdminOwnedBase_TestInit {
         harness.setSlot1(address(harness), address(0));
 
         // Expect a revert.
-        vm.expectRevert(ProxyAdminOwnedBase.ProxyAdminOwnedBase_ProxyAdminNotFound.selector);
+        vm.expectRevert(ProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_ProxyAdminNotFound.selector);
         harness.proxyAdmin();
     }
 }
 
-contract ProxyAdminOwnedBase_assertSharedProxyAdminOwner_Test is ProxyAdminOwnedBase_TestInit {
+contract ProxyAdminOwnedUnstable_assertSharedProxyAdminOwner_Test is ProxyAdminOwnedUnstable_TestInit {
     /// @notice Tests that the assertSharedProxyAdminOwner function does not revert if the provided
     ///         proxy has the same owner as the current contract.
     function test_assertSharedProxyAdminOwner_sameOwner_succeeds(address _proxy) public {
@@ -140,7 +140,7 @@ contract ProxyAdminOwnedBase_assertSharedProxyAdminOwner_Test is ProxyAdminOwned
         assumeNotForgeAddress(_proxy);
 
         // Mock the proxyAdminOwner function to return the same owner as the current contract.
-        vm.mockCall(_proxy, abi.encodeCall(ProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(proxyAdminOwner));
+        vm.mockCall(_proxy, abi.encodeCall(ProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(proxyAdminOwner));
 
         // Expect no revert.
         harness.assertSharedProxyAdminOwner(_proxy);
@@ -162,15 +162,15 @@ contract ProxyAdminOwnedBase_assertSharedProxyAdminOwner_Test is ProxyAdminOwned
         vm.assume(_otherProxyOwner != proxyAdminOwner);
 
         // Mock the proxyAdminOwner function to return the other proxy owner.
-        vm.mockCall(_proxy, abi.encodeCall(ProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(_otherProxyOwner));
+        vm.mockCall(_proxy, abi.encodeCall(ProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(_otherProxyOwner));
 
         // Expect a revert.
-        vm.expectRevert(ProxyAdminOwnedBase.ProxyAdminOwnedBase_NotSharedProxyAdminOwner.selector);
+        vm.expectRevert(ProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotSharedProxyAdminOwner.selector);
         harness.assertSharedProxyAdminOwner(_proxy);
     }
 }
 
-contract ProxyAdminOwnedBase_assertOnlyProxyAdmin_Test is ProxyAdminOwnedBase_TestInit {
+contract ProxyAdminOwnedUnstable_assertOnlyProxyAdmin_Test is ProxyAdminOwnedUnstable_TestInit {
     /// @notice Tests that the assertOnlyProxyAdmin function does not revert if the caller is the
     ///         ProxyAdmin.
     function test_assertOnlyProxyAdmin_proxyAdmin_succeeds() public {
@@ -190,12 +190,12 @@ contract ProxyAdminOwnedBase_assertOnlyProxyAdmin_Test is ProxyAdminOwnedBase_Te
         vm.prank(_sender);
 
         // Expect a revert.
-        vm.expectRevert(ProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdmin.selector);
+        vm.expectRevert(ProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdmin.selector);
         harness.assertOnlyProxyAdmin();
     }
 }
 
-contract ProxyAdminOwnedBase_assertOnlyProxyAdminOwner_Test is ProxyAdminOwnedBase_TestInit {
+contract ProxyAdminOwnedUnstable_assertOnlyProxyAdminOwner_Test is ProxyAdminOwnedUnstable_TestInit {
     /// @notice Tests that the assertOnlyProxyAdminOwner function does not revert if the caller is
     ///         the ProxyAdmin owner.
     function test_assertOnlyProxyAdminOwner_proxyAdminOwner_succeeds() public {
@@ -215,12 +215,12 @@ contract ProxyAdminOwnedBase_assertOnlyProxyAdminOwner_Test is ProxyAdminOwnedBa
         vm.prank(_sender);
 
         // Expect a revert.
-        vm.expectRevert(ProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOwner.selector);
+        vm.expectRevert(ProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOwner.selector);
         harness.assertOnlyProxyAdminOwner();
     }
 }
 
-contract ProxyAdminOwnedBase_assertOnlyProxyAdminOrProxyAdminOwner_Test is ProxyAdminOwnedBase_TestInit {
+contract ProxyAdminOwnedUnstable_assertOnlyProxyAdminOrProxyAdminOwner_Test is ProxyAdminOwnedUnstable_TestInit {
     /// @notice Tests that the assertOnlyProxyAdminOrProxyAdminOwner function does not revert if
     ///         the caller is the ProxyAdmin or the ProxyAdmin owner.
     function test_assertOnlyProxyAdminOrProxyAdminOwner_proxyAdmin_succeeds() public {
@@ -250,7 +250,7 @@ contract ProxyAdminOwnedBase_assertOnlyProxyAdminOrProxyAdminOwner_Test is Proxy
         vm.prank(_sender);
 
         // Expect a revert.
-        vm.expectRevert(ProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        vm.expectRevert(ProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
         harness.assertOnlyProxyAdminOrProxyAdminOwner();
     }
 }

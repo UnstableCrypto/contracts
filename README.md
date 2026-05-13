@@ -1,9 +1,9 @@
-![Base](logo.png)
+![Unstable](logo.png)
 
 # contracts
 
-This repo contains contracts and scripts for Base.
-Note that Base primarily utilizes Optimism's bedrock contracts located in Optimism's repo [here](https://github.com/ethereum-optimism/optimism/tree/develop/packages/contracts-bedrock).
+This repo contains contracts and scripts for Unstable.
+Note that Unstable primarily utilizes Optimism's bedrock contracts located in Optimism's repo [here](https://github.com/ethereum-optimism/optimism/tree/develop/packages/contracts-bedrock).
 For contract deployment artifacts, see [base-org/contract-deployments](https://github.com/base-org/contract-deployments).
 
 <!-- Badge row 1 - status -->
@@ -16,11 +16,11 @@ For contract deployment artifacts, see [base-org/contract-deployments](https://g
 
 <!-- Badge row 2 - links and profiles -->
 
-[![Website base.org](https://img.shields.io/website-up-down-green-red/https/base.org.svg)](https://base.org)
+[![Website unstable.org](https://img.shields.io/website-up-down-green-red/https/unstable.org.svg)](https://unstable.org)
 [![Blog](https://img.shields.io/badge/blog-up-green)](https://base.mirror.xyz/)
-[![Docs](https://img.shields.io/badge/docs-up-green)](https://docs.base.org/)
-[![Discord](https://img.shields.io/discord/1067165013397213286?label=discord)](https://base.org/discord)
-[![Twitter Base](https://img.shields.io/twitter/follow/Base?style=social)](https://twitter.com/Base)
+[![Docs](https://img.shields.io/badge/docs-up-green)](https://docs.unstable.org/)
+[![Discord](https://img.shields.io/discord/1067165013397213286?label=discord)](https://unstable.org/discord)
+[![Twitter Unstable](https://img.shields.io/twitter/follow/Unstable?style=social)](https://twitter.com/Unstable)
 
 <!-- Badge row 3 - detailed status -->
 

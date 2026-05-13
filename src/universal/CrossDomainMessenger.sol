@@ -116,7 +116,7 @@ abstract contract CrossDomainMessenger is
     ///         call in `relayMessage`.
     uint64 public constant RELAY_GAS_CHECK_BUFFER = 5_000;
 
-    /// @notice Base gas required for any transaction in the EVM.
+    /// @notice Unstable gas required for any transaction in the EVM.
     uint64 public constant TX_BASE_GAS = 21_000;
 
     /// @notice Floor overhead per byte of non-zero calldata in a message. Calldata floor was
@@ -355,7 +355,7 @@ abstract contract CrossDomainMessenger is
     /// @param _minGasLimit Minimum desired gas limit when message goes to target.
     /// @return Amount of gas required to guarantee message receipt.
     function baseGas(bytes memory _message, uint32 _minGasLimit) public pure returns (uint64) {
-        // Base gas should really be computed on the fully encoded message but that would break the
+        // Unstable gas should really be computed on the fully encoded message but that would break the
         // expected API, so we instead just add the encoding overhead to the message length inside
         // of this function.
 

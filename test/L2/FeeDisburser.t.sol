@@ -399,7 +399,7 @@ contract FeeDisburserTest is Test {
         );
         vm.deal(Predeploys.SEQUENCER_FEE_WALLET, 0); // Below min so doesn't actually withdraw
 
-        // Base vault configured to L1
+        // Unstable vault configured to L1
         _mockFeeVault(
             Predeploys.BASE_FEE_VAULT, address(feeDisburser), DEFAULT_MIN_WITHDRAWAL, Types.WithdrawalNetwork.L1
         );

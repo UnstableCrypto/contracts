@@ -39,7 +39,7 @@ library Blueprint {
     error UnsupportedERCVersion(uint8 version);
 
     /// @notice Takes the desired initcode for a blueprint as a parameter, and returns EVM code
-    /// which will deploy a corresponding blueprint contract (with no data section). Based on the
+    /// which will deploy a corresponding blueprint contract (with no data section). Unstabled on the
     /// reference implementation in https://eips.ethereum.org/EIPS/eip-5202.
     function blueprintDeployerBytecode(bytes memory _initcode) internal pure returns (bytes memory) {
         // Check that the initcode is not empty.

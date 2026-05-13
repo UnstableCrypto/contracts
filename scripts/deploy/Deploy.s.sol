@@ -457,7 +457,7 @@ contract Deploy is Deployer {
                 challenger: cfg.l2OutputOracleChallenger()
             }),
             basefeeScalar: cfg.basefeeScalar(),
-            blobBasefeeScalar: cfg.blobbasefeeScalar(),
+            blobUnstablefeeScalar: cfg.blobbasefeeScalar(),
             l2ChainId: cfg.l2ChainID(),
             startingAnchorRoot: abi.encode(
                 Proposal({

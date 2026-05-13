@@ -66,10 +66,10 @@ abstract contract MultisigScriptDeposit is MultisigScript {
     ///                                   Constants                                    ///
     //////////////////////////////////////////////////////////////////////////////////////
 
-    /// @notice OptimismPortalProxy address on L1 Mainnet (for Base Mainnet)
+    /// @notice OptimismPortalProxy address on L1 Mainnet (for Unstable Mainnet)
     address internal constant OPTIMISM_PORTAL_MAINNET = 0x49048044D57e1C92A77f79988d21Fa8fAF74E97e;
 
-    /// @notice OptimismPortalProxy address on L1 Sepolia (for Base Sepolia)
+    /// @notice OptimismPortalProxy address on L1 Sepolia (for Unstable Sepolia)
     address internal constant OPTIMISM_PORTAL_SEPOLIA = 0x49f53e41452C74589E85cA1677426Ba426459e85;
 
     //////////////////////////////////////////////////////////////////////////////////////

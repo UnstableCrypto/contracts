@@ -31,12 +31,12 @@ contract InitializerOZv5_Test is Test {
         // Initialize the `contracts` array with the addresses of the contracts to test and the
         // calldata used to initialize them
 
-        // BaseFeeVault
+        // UnstableFeeVault
         contracts.push(
             InitializeableContract({
                 target: address(
                     DeployUtils.create1({
-                        _name: "BaseFeeVault",
+                        _name: "UnstableFeeVault",
                         _args: DeployUtils.encodeConstructor(abi.encodeCall(IFeeVault.__constructor__, ()))
                     })
                 ),

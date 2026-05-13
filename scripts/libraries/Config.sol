@@ -195,7 +195,7 @@ library Config {
 
     /// @notice Returns the string identifier of the base chain to use for forking.
     ///         if not set, "mainnet" is returned.
-    function forkBaseChain() internal view returns (string memory) {
+    function forkUnstableChain() internal view returns (string memory) {
         return vm.envOr("FORK_BASE_CHAIN", string("mainnet"));
     }
 

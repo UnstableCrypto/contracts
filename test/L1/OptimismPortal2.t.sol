@@ -30,7 +30,7 @@ import { IFaultDisputeGameV2 } from "interfaces/L1/proofs/v2/IFaultDisputeGameV2
 import { IProxy } from "interfaces/universal/IProxy.sol";
 import { IAnchorStateRegistry } from "interfaces/L1/proofs/IAnchorStateRegistry.sol";
 import { IETHLockbox } from "interfaces/L1/IETHLockbox.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
 abstract contract OptimismPortal2_TestInit is DisputeGameFactory_TestInit {
     address depositor;
@@ -273,8 +273,8 @@ contract OptimismPortal2_Initialize_Test is OptimismPortal2_TestInit {
         // Set the initialized slot to 0.
         vm.store(address(optimismPortal2), bytes32(slot.slot), bytes32(0));
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner` selector.
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner` selector.
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
 
         // Call the `initialize` function with the sender
         vm.prank(_sender);
@@ -2129,12 +2129,12 @@ contract OptimismPortal2_Params_Test is CommonTest {
         uint32 _maxResourceLimit,
         uint8 _elasticityMultiplier,
         uint8 _baseFeeMaxChangeDenominator,
-        uint32 _minimumBaseFee,
+        uint32 _minimumUnstableFee,
         uint32 _systemTxMaxGas,
-        uint128 _maximumBaseFee,
+        uint128 _maximumUnstableFee,
         uint64 _gasLimit,
         uint64 _prevBoughtGas,
-        uint128 _prevBaseFee,
+        uint128 _prevUnstableFee,
         uint8 _blockDiff
     )
         external
@@ -2146,11 +2146,11 @@ contract OptimismPortal2_Params_Test is CommonTest {
         _systemTxMaxGas = uint32(bound(_systemTxMaxGas, 0, gasLimit - 21000));
         _maxResourceLimit = uint32(bound(_maxResourceLimit, 21000, MAX_GAS_LIMIT / 8));
         _maxResourceLimit = uint32(bound(_maxResourceLimit, 21000, gasLimit - _systemTxMaxGas));
-        _maximumBaseFee = uint128(bound(_maximumBaseFee, 1, type(uint128).max));
-        _minimumBaseFee = uint32(bound(_minimumBaseFee, 0, _maximumBaseFee - 1));
+        _maximumUnstableFee = uint128(bound(_maximumUnstableFee, 1, type(uint128).max));
+        _minimumUnstableFee = uint32(bound(_minimumUnstableFee, 0, _maximumUnstableFee - 1));
         _gasLimit = uint64(bound(_gasLimit, 21000, _maxResourceLimit));
         _gasLimit = uint64(bound(_gasLimit, 0, gasLimit));
-        _prevBaseFee = uint128(bound(_prevBaseFee, 0, 3 gwei));
+        _prevUnstableFee = uint128(bound(_prevUnstableFee, 0, 3 gwei));
         _prevBoughtGas = uint64(bound(_prevBoughtGas, 0, _maxResourceLimit - _gasLimit));
         _blockDiff = uint8(bound(_blockDiff, 0, 3));
         _baseFeeMaxChangeDenominator = uint8(bound(_baseFeeMaxChangeDenominator, 2, type(uint8).max));
@@ -2165,9 +2165,9 @@ contract OptimismPortal2_Params_Test is CommonTest {
         // serve only to act as an additional sanity check on top of the bounds and should not
         // result in an unnecessary number of test rejections.
         vm.assume(gasLimit >= _gasLimit);
-        vm.assume(_minimumBaseFee < _maximumBaseFee);
+        vm.assume(_minimumUnstableFee < _maximumUnstableFee);
 
-        // Base fee can increase quickly and mean that we can't buy the amount of gas we want.
+        // Unstable fee can increase quickly and mean that we can't buy the amount of gas we want.
         // Here we add a VM assumption to bound the potential increase.
         // Compute the maximum possible increase in base fee.
         uint256 maxPercentIncrease = uint256(_elasticityMultiplier - 1) * 100 / uint256(_baseFeeMaxChangeDenominator);
@@ -2175,7 +2175,7 @@ contract OptimismPortal2_Params_Test is CommonTest {
         // Assume that we have enough gas to burn.
         // Compute the maximum amount of gas we'd need to burn.
         // Assume we need 1/5 of our gas to do other stuff.
-        vm.assume(_prevBaseFee * maxPercentIncrease * _gasLimit / 100 < MAX_GAS_LIMIT * 4 / 5);
+        vm.assume(_prevUnstableFee * maxPercentIncrease * _gasLimit / 100 < MAX_GAS_LIMIT * 4 / 5);
 
         // Pick a pseudorandom block number
         vm.roll(uint256(keccak256(abi.encode(_blockDiff))) % uint256(type(uint16).max) + uint256(_blockDiff));
@@ -2185,9 +2185,9 @@ contract OptimismPortal2_Params_Test is CommonTest {
             maxResourceLimit: _maxResourceLimit,
             elasticityMultiplier: _elasticityMultiplier,
             baseFeeMaxChangeDenominator: _baseFeeMaxChangeDenominator,
-            minimumBaseFee: _minimumBaseFee,
+            minimumUnstableFee: _minimumUnstableFee,
             systemTxMaxGas: _systemTxMaxGas,
-            maximumBaseFee: _maximumBaseFee
+            maximumUnstableFee: _maximumUnstableFee
         });
         vm.mockCall(address(systemConfig), abi.encodeCall(systemConfig.resourceConfig, ()), abi.encode(rcfg));
 
@@ -2196,12 +2196,12 @@ contract OptimismPortal2_Params_Test is CommonTest {
         vm.store(
             address(optimismPortal2),
             bytes32(uint256(1)),
-            bytes32((_prevBlockNum << 192) | (uint256(_prevBoughtGas) << 128) | _prevBaseFee)
+            bytes32((_prevBlockNum << 192) | (uint256(_prevBoughtGas) << 128) | _prevUnstableFee)
         );
 
         // Ensure that the storage setting is correct
-        (uint128 prevBaseFee, uint64 prevBoughtGas, uint64 prevBlockNum) = optimismPortal2.params();
-        assertEq(prevBaseFee, _prevBaseFee);
+        (uint128 prevUnstableFee, uint64 prevBoughtGas, uint64 prevBlockNum) = optimismPortal2.params();
+        assertEq(prevUnstableFee, _prevUnstableFee);
         assertEq(prevBoughtGas, _prevBoughtGas);
         assertEq(prevBlockNum, _prevBlockNum);
 
@@ -2214,10 +2214,10 @@ contract OptimismPortal2_Params_Test is CommonTest {
     /// @notice Tests that the proxy is initialized correctly.
     function test_params_initValuesOnProxy_succeeds() external {
         skipIfForkTest("OptimismPortal2_Test: resource config varies on mainnet");
-        (uint128 prevBaseFee, uint64 prevBoughtGas, uint64 prevBlockNum) = optimismPortal2.params();
+        (uint128 prevUnstableFee, uint64 prevBoughtGas, uint64 prevBlockNum) = optimismPortal2.params();
         IResourceMetering.ResourceConfig memory rcfg = systemConfig.resourceConfig();
 
-        assertEq(prevBaseFee, rcfg.minimumBaseFee);
+        assertEq(prevUnstableFee, rcfg.minimumUnstableFee);
         assertEq(prevBoughtGas, 0);
         assertEq(prevBlockNum, block.number);
     }

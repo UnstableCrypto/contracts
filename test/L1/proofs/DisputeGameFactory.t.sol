@@ -15,7 +15,7 @@ import "src/libraries/bridge/Errors.sol";
 // Interfaces
 import { IDisputeGameFactory } from "interfaces/L1/proofs/IDisputeGameFactory.sol";
 import { IDisputeGame } from "interfaces/L1/proofs/IDisputeGame.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 import { IPreimageOracle } from "interfaces/cannon/IPreimageOracle.sol";
 import { IFaultDisputeGameV2 } from "interfaces/L1/proofs/v2/IFaultDisputeGameV2.sol";
 import { IPermissionedDisputeGameV2 } from "interfaces/L1/proofs/v2/IPermissionedDisputeGameV2.sol";
@@ -239,8 +239,8 @@ contract DisputeGameFactory_Initialize_Test is DisputeGameFactory_TestInit {
         // Set the initialized slot to 0.
         vm.store(address(disputeGameFactory), bytes32(slot.slot), bytes32(0));
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner` selector.
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner` selector.
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
 
         // Call the `initialize` function with the sender.
         vm.prank(_sender);

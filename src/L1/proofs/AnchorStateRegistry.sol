@@ -3,8 +3,8 @@ pragma solidity 0.8.15;
 
 // Contracts
 import { Initializable } from "lib/openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
-import { ProxyAdminOwnedBase } from "src/universal/ProxyAdminOwnedBase.sol";
-import { ReinitializableBase } from "src/universal/ReinitializableBase.sol";
+import { ProxyAdminOwnedUnstable } from "src/universal/ProxyAdminOwnedUnstable.sol";
+import { ReinitializableUnstable } from "src/universal/ReinitializableUnstable.sol";
 
 // Libraries
 import { GameType, Proposal, Claim, GameStatus, Hash } from "src/libraries/bridge/Types.sol";
@@ -23,7 +23,7 @@ import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
 ///         FaultDisputeGame type. The anchor state is the latest state that has been proposed on L1 and was not
 ///         challenged within the challenge period. By using stored anchor states, new FaultDisputeGame instances can
 ///         be initialized with a more recent starting state which reduces the amount of required offchain computation.
-contract AnchorStateRegistry is ProxyAdminOwnedBase, Initializable, ReinitializableBase, ISemver {
+contract AnchorStateRegistry is ProxyAdminOwnedUnstable, Initializable, ReinitializableUnstable, ISemver {
     /// @notice Semantic version.
     /// @custom:semver 3.7.0
     string public constant version = "3.7.0";
@@ -77,7 +77,7 @@ contract AnchorStateRegistry is ProxyAdminOwnedBase, Initializable, Reinitializa
     error AnchorStateRegistry_Unauthorized();
 
     /// @param _disputeGameFinalityDelaySeconds The dispute game finality delay in seconds.
-    constructor(uint256 _disputeGameFinalityDelaySeconds) ReinitializableBase(2) {
+    constructor(uint256 _disputeGameFinalityDelaySeconds) ReinitializableUnstable(2) {
         DISPUTE_GAME_FINALITY_DELAY_SECONDS = _disputeGameFinalityDelaySeconds;
         _disableInitializers();
     }

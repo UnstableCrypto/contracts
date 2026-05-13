@@ -12,11 +12,11 @@ import { InvariantTest } from "test/invariants/InvariantTest.sol";
 
 contract ResourceMetering_User is StdUtils, ResourceMetering {
     bool public failedMaxGasPerBlock;
-    bool public failedRaiseBaseFee;
-    bool public failedLowerBaseFee;
-    bool public failedNeverBelowMinBaseFee;
-    bool public failedMaxRaiseBaseFeePerBlock;
-    bool public failedMaxLowerBaseFeePerBlock;
+    bool public failedRaiseUnstableFee;
+    bool public failedLowerUnstableFee;
+    bool public failedNeverBelowMinUnstableFee;
+    bool public failedMaxRaiseUnstableFeePerBlock;
+    bool public failedMaxLowerUnstableFeePerBlock;
 
     // Used as a special flag for the purpose of identifying unchecked math errors specifically
     // in the test contracts, not the target contracts themselves.
@@ -43,9 +43,9 @@ contract ResourceMetering_User is StdUtils, ResourceMetering {
 
     /// @notice Takes the necessary parameters to allow us to burn arbitrary amounts of gas to test
     ///         the underlying resource metering/gas market logic
-    function burn(uint256 _gasToBurn, bool _raiseBaseFee) public {
+    function burn(uint256 _gasToBurn, bool _raiseUnstableFee) public {
         // Part 1: we cache the current param values and do some basic checks on them.
-        uint256 cachedPrevBaseFee = uint256(params.prevBaseFee);
+        uint256 cachedPrevUnstableFee = uint256(params.prevUnstableFee);
         uint256 cachedPrevBoughtGas = uint256(params.prevBoughtGas);
         uint256 cachedPrevBlockNum = uint256(params.prevBlockNum);
 
@@ -53,8 +53,8 @@ contract ResourceMetering_User is StdUtils, ResourceMetering {
         uint256 targetResourceLimit = uint256(rcfg.maxResourceLimit) / uint256(rcfg.elasticityMultiplier);
 
         // check that the last block's base fee hasn't dropped below the minimum
-        if (cachedPrevBaseFee < uint256(rcfg.minimumBaseFee)) {
-            failedNeverBelowMinBaseFee = true;
+        if (cachedPrevUnstableFee < uint256(rcfg.minimumUnstableFee)) {
+            failedNeverBelowMinUnstableFee = true;
         }
         // check that the last block didn't consume more than the max amount of gas
         if (cachedPrevBoughtGas > uint256(rcfg.maxResourceLimit)) {
@@ -66,7 +66,7 @@ contract ResourceMetering_User is StdUtils, ResourceMetering {
         // force the gasToBurn into the correct range based on whether we intend to
         // raise or lower the baseFee after this block, respectively
         uint256 gasToBurn;
-        if (_raiseBaseFee) {
+        if (_raiseUnstableFee) {
             gasToBurn = bound(_gasToBurn, uint256(targetResourceLimit), uint256(rcfg.maxResourceLimit));
         } else {
             gasToBurn = bound(_gasToBurn, 0, targetResourceLimit);
@@ -77,7 +77,7 @@ contract ResourceMetering_User is StdUtils, ResourceMetering {
         // Part 3: we run checks and modify our invariant flags based on the updated params values
 
         // Calculate the maximum allowed baseFee change (per block)
-        uint256 maxBaseFeeChange = cachedPrevBaseFee / uint256(rcfg.baseFeeMaxChangeDenominator);
+        uint256 maxUnstableFeeChange = cachedPrevUnstableFee / uint256(rcfg.baseFeeMaxChangeDenominator);
 
         // If the last block used more than the target amount of gas (and there were no
         // empty blocks in between), ensure this block's baseFee increased, but not by
@@ -86,9 +86,9 @@ contract ResourceMetering_User is StdUtils, ResourceMetering {
             (cachedPrevBoughtGas > uint256(targetResourceLimit))
                 && (uint256(params.prevBlockNum) - cachedPrevBlockNum == 1)
         ) {
-            failedRaiseBaseFee = failedRaiseBaseFee || (params.prevBaseFee <= cachedPrevBaseFee);
-            failedMaxRaiseBaseFeePerBlock =
-                failedMaxRaiseBaseFeePerBlock || ((uint256(params.prevBaseFee) - cachedPrevBaseFee) < maxBaseFeeChange);
+            failedRaiseUnstableFee = failedRaiseUnstableFee || (params.prevUnstableFee <= cachedPrevUnstableFee);
+            failedMaxRaiseUnstableFeePerBlock =
+                failedMaxRaiseUnstableFeePerBlock || ((uint256(params.prevUnstableFee) - cachedPrevUnstableFee) < maxUnstableFeeChange);
         }
 
         // If the last block used less than the target amount of gas, (or was empty),
@@ -98,27 +98,27 @@ contract ResourceMetering_User is StdUtils, ResourceMetering {
                 || (uint256(params.prevBlockNum) - cachedPrevBlockNum > 1)
         ) {
             // Invariant: baseFee should decrease
-            failedLowerBaseFee = failedLowerBaseFee || (uint256(params.prevBaseFee) > cachedPrevBaseFee);
+            failedLowerUnstableFee = failedLowerUnstableFee || (uint256(params.prevUnstableFee) > cachedPrevUnstableFee);
 
             if (params.prevBlockNum - cachedPrevBlockNum == 1) {
                 // No empty blocks
                 // Invariant: baseFee should not have decreased by more than the maximum amount
-                failedMaxLowerBaseFeePerBlock = failedMaxLowerBaseFeePerBlock
-                    || ((cachedPrevBaseFee - uint256(params.prevBaseFee)) <= maxBaseFeeChange);
+                failedMaxLowerUnstableFeePerBlock = failedMaxLowerUnstableFeePerBlock
+                    || ((cachedPrevUnstableFee - uint256(params.prevUnstableFee)) <= maxUnstableFeeChange);
             } else if (params.prevBlockNum - cachedPrevBlockNum > 1) {
                 // We have at least one empty block
-                // Update the maxBaseFeeChange to account for multiple blocks having passed
+                // Update the maxUnstableFeeChange to account for multiple blocks having passed
                 unchecked {
-                    maxBaseFeeChange = uint256(
-                        int256(cachedPrevBaseFee)
+                    maxUnstableFeeChange = uint256(
+                        int256(cachedPrevUnstableFee)
                             - Arithmetic.clamp(
                                 Arithmetic.cdexp(
-                                    int256(cachedPrevBaseFee),
+                                    int256(cachedPrevUnstableFee),
                                     int256(uint256(rcfg.baseFeeMaxChangeDenominator)),
                                     int256(uint256(params.prevBlockNum) - cachedPrevBlockNum)
                                 ),
-                                int256(uint256(rcfg.minimumBaseFee)),
-                                int256(uint256(rcfg.maximumBaseFee))
+                                int256(uint256(rcfg.minimumUnstableFee)),
+                                int256(uint256(rcfg.maximumUnstableFee))
                             )
                     );
                 }
@@ -126,11 +126,11 @@ contract ResourceMetering_User is StdUtils, ResourceMetering {
                 // Detect an underflow in the previous calculation.
                 // Without using unchecked above, and detecting the underflow here, fuzzer would
                 // otherwise ignore the revert.
-                underflow = underflow || maxBaseFeeChange > cachedPrevBaseFee;
+                underflow = underflow || maxUnstableFeeChange > cachedPrevUnstableFee;
 
                 // Invariant: baseFee should not have decreased by more than the maximum amount
-                failedMaxLowerBaseFeePerBlock = failedMaxLowerBaseFeePerBlock
-                    || ((cachedPrevBaseFee - uint256(params.prevBaseFee)) <= maxBaseFeeChange);
+                failedMaxLowerUnstableFeePerBlock = failedMaxLowerUnstableFeePerBlock
+                    || ((cachedPrevUnstableFee - uint256(params.prevUnstableFee)) <= maxUnstableFeeChange);
             }
         }
     }
@@ -162,7 +162,7 @@ contract ResourceMetering_Invariant is StdInvariant, InvariantTest {
     ///                   block's baseFee increased, but not by more than the max amount
     ///                   per block.
     function invariant_high_usage_raise_baseFee() external view {
-        assertFalse(actor.failedRaiseBaseFee());
+        assertFalse(actor.failedRaiseUnstableFee());
     }
 
     /// @custom:invariant The base fee should decrease if the last block used less
@@ -171,7 +171,7 @@ contract ResourceMetering_Invariant is StdInvariant, InvariantTest {
     ///                   If the previous block used less than the target amount of gas,
     ///                   the base fee should decrease, but not more than the max amount.
     function invariant_low_usage_lower_baseFee() external view {
-        assertFalse(actor.failedLowerBaseFee());
+        assertFalse(actor.failedLowerUnstableFee());
     }
 
     /// @custom:invariant A block's base fee should never be below `MINIMUM_BASE_FEE`.
@@ -179,7 +179,7 @@ contract ResourceMetering_Invariant is StdInvariant, InvariantTest {
     ///                   This test asserts that a block's base fee can never drop
     ///                   below the `MINIMUM_BASE_FEE` threshold.
     function invariant_never_below_min_baseFee() external view {
-        assertFalse(actor.failedNeverBelowMinBaseFee());
+        assertFalse(actor.failedNeverBelowMinUnstableFee());
     }
 
     /// @custom:invariant A block can never consume more than `MAX_RESOURCE_LIMIT` gas.
@@ -195,9 +195,9 @@ contract ResourceMetering_Invariant is StdInvariant, InvariantTest {
     ///                   After a block consumes more gas than the target gas, the base fee
     ///                   cannot be raised more than the maximum amount allowed. The max base
     ///                   fee change (per-block) is derived as follows:
-    ///                   `prevBaseFee / BASE_FEE_MAX_CHANGE_DENOMINATOR`
+    ///                   `prevUnstableFee / BASE_FEE_MAX_CHANGE_DENOMINATOR`
     function invariant_never_exceed_max_increase() external view {
-        assertFalse(actor.failedMaxRaiseBaseFeePerBlock());
+        assertFalse(actor.failedMaxRaiseUnstableFeePerBlock());
     }
 
     /// @custom:invariant The base fee can never be lowered more than the max base fee change.
@@ -205,15 +205,15 @@ contract ResourceMetering_Invariant is StdInvariant, InvariantTest {
     ///                   After a block consumes less than the target gas, the base fee cannot
     ///                   be lowered more than the maximum amount allowed. The max base fee
     ///                   change (per-block) is derived as follows:
-    ///                   `prevBaseFee / BASE_FEE_MAX_CHANGE_DENOMINATOR`
+    ///                   `prevUnstableFee / BASE_FEE_MAX_CHANGE_DENOMINATOR`
     function invariant_never_exceed_max_decrease() external view {
-        assertFalse(actor.failedMaxLowerBaseFeePerBlock());
+        assertFalse(actor.failedMaxLowerUnstableFeePerBlock());
     }
 
-    /// @custom:invariant The `maxBaseFeeChange` calculation over multiple blocks can never
+    /// @custom:invariant The `maxUnstableFeeChange` calculation over multiple blocks can never
     ///                   underflow.
     ///
-    ///                   When calculating the `maxBaseFeeChange` after multiple empty blocks,
+    ///                   When calculating the `maxUnstableFeeChange` after multiple empty blocks,
     ///                   the calculation should never be allowed to underflow.
     function invariant_never_underflow() external view {
         assertFalse(actor.underflow());

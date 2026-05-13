@@ -6,9 +6,9 @@ import { Claim, GameStatus } from "src/libraries/bridge/Types.sol";
 
 import { AggregateVerifier } from "src/L1/proofs/AggregateVerifier.sol";
 
-import { BaseTest } from "./BaseTest.t.sol";
+import { UnstableTest } from "./UnstableTest.t.sol";
 
-contract NullifyTest is BaseTest {
+contract NullifyTest is UnstableTest {
     function testNullifyWithTEEProof() public {
         currentL2BlockNumber += BLOCK_INTERVAL;
 

@@ -3,8 +3,8 @@ pragma solidity 0.8.15;
 
 // Contracts
 import { Initializable } from "lib/openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
-import { ProxyAdminOwnedBase } from "src/universal/ProxyAdminOwnedBase.sol";
-import { ReinitializableBase } from "src/universal/ReinitializableBase.sol";
+import { ProxyAdminOwnedUnstable } from "src/universal/ProxyAdminOwnedUnstable.sol";
+import { ReinitializableUnstable } from "src/universal/ReinitializableUnstable.sol";
 
 // Libraries
 import { Constants } from "src/libraries/Constants.sol";
@@ -20,7 +20,7 @@ import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
 /// @title ETHLockbox
 /// @notice Manages ETH liquidity locking and unlocking for authorized OptimismPortals, enabling unified ETH liquidity
 ///         management across chains in the superchain cluster.
-contract ETHLockbox is ProxyAdminOwnedBase, Initializable, ReinitializableBase, ISemver {
+contract ETHLockbox is ProxyAdminOwnedUnstable, Initializable, ReinitializableUnstable, ISemver {
     /// @notice Thrown when the lockbox is paused.
     error ETHLockbox_Paused();
 
@@ -79,7 +79,7 @@ contract ETHLockbox is ProxyAdminOwnedBase, Initializable, ReinitializableBase, 
     }
 
     /// @notice Constructs the ETHLockbox contract.
-    constructor() ReinitializableBase(1) {
+    constructor() ReinitializableUnstable(1) {
         _disableInitializers();
     }
 

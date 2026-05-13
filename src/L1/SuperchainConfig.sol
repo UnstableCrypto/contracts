@@ -2,7 +2,7 @@
 pragma solidity 0.8.15;
 
 // Contracts
-import { ProxyAdminOwnedBase } from "src/universal/ProxyAdminOwnedBase.sol";
+import { ProxyAdminOwnedUnstable } from "src/universal/ProxyAdminOwnedUnstable.sol";
 
 // Interfaces
 import { ISemver } from "interfaces/universal/ISemver.sol";
@@ -13,7 +13,7 @@ import { ISemver } from "interfaces/universal/ISemver.sol";
 /// @dev WARNING: When upgrading this contract, any active pause states will be lost as the pause state
 ///      is stored in storage variables that are not preserved during upgrades. Therefore, this contract
 ///      should not be upgraded while the system is paused.
-contract SuperchainConfig is ProxyAdminOwnedBase, ISemver {
+contract SuperchainConfig is ProxyAdminOwnedUnstable, ISemver {
     /// @notice Thrown when a caller is not the guardian but tries to call a guardian-only function
     error SuperchainConfig_OnlyGuardian();
 

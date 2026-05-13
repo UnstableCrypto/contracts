@@ -4,7 +4,7 @@ pragma solidity 0.8.15;
 // Testing
 import { Vm } from "lib/forge-std/src/Vm.sol";
 import { StdUtils } from "lib/forge-std/src/StdUtils.sol";
-import { BaseFaultDisputeGame_TestInit } from "test/L1/proofs/FaultDisputeGame.t.sol";
+import { UnstableFaultDisputeGame_TestInit } from "test/L1/proofs/FaultDisputeGame.t.sol";
 
 // Libraries
 import "src/libraries/bridge/Types.sol";
@@ -13,7 +13,7 @@ import "src/libraries/bridge/Errors.sol";
 // Interfaces
 import { IFaultDisputeGameV2 } from "interfaces/L1/proofs/v2/IFaultDisputeGameV2.sol";
 
-contract FaultDisputeGame_Solvency_Invariant is BaseFaultDisputeGame_TestInit {
+contract FaultDisputeGame_Solvency_Invariant is UnstableFaultDisputeGame_TestInit {
     Claim internal constant ROOT_CLAIM = Claim.wrap(bytes32(uint256(10)));
     Claim internal constant ABSOLUTE_PRESTATE = Claim.wrap(bytes32((uint256(3) << 248) | uint256(0)));
 

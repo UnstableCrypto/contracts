@@ -42,7 +42,7 @@ import { IL2ToL1MessagePasser } from "interfaces/L2/IL2ToL1MessagePasser.sol";
 import { IL2ERC721Bridge } from "interfaces/L2/IL2ERC721Bridge.sol";
 import { IOptimismMintableERC20Factory } from "interfaces/universal/IOptimismMintableERC20Factory.sol";
 import { IAddressManager } from "interfaces/legacy/IAddressManager.sol";
-import { IBaseFeeVault } from "interfaces/L2/IBaseFeeVault.sol";
+import { IUnstableFeeVault } from "interfaces/L2/IUnstableFeeVault.sol";
 import { ISequencerFeeVault } from "interfaces/L2/ISequencerFeeVault.sol";
 import { IL1FeeVault } from "interfaces/L2/IL1FeeVault.sol";
 import { IOperatorFeeVault } from "interfaces/L2/IOperatorFeeVault.sol";
@@ -120,7 +120,7 @@ abstract contract Setup is FeatureFlags {
     IL2ERC721Bridge l2ERC721Bridge = IL2ERC721Bridge(Predeploys.L2_ERC721_BRIDGE);
     IOptimismMintableERC721Factory l2OptimismMintableERC721Factory =
         IOptimismMintableERC721Factory(Predeploys.OPTIMISM_MINTABLE_ERC721_FACTORY);
-    IBaseFeeVault baseFeeVault = IBaseFeeVault(payable(Predeploys.BASE_FEE_VAULT));
+    IUnstableFeeVault baseFeeVault = IUnstableFeeVault(payable(Predeploys.BASE_FEE_VAULT));
     ISequencerFeeVault sequencerFeeVault = ISequencerFeeVault(payable(Predeploys.SEQUENCER_FEE_WALLET));
     IL1FeeVault l1FeeVault = IL1FeeVault(payable(Predeploys.L1_FEE_VAULT));
     IOperatorFeeVault operatorFeeVault = IOperatorFeeVault(payable(Predeploys.OPERATOR_FEE_VAULT));

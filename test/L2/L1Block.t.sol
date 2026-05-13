@@ -109,19 +109,19 @@ contract L1Block_SetL1BlockValuesEcotone_Test is L1Block_TestInit {
     /// @notice Tests that setL1BlockValuesEcotone updates the values appropriately.
     function testFuzz_setL1BlockValuesEcotone_succeeds(
         uint32 baseFeeScalar,
-        uint32 blobBaseFeeScalar,
+        uint32 blobUnstableFeeScalar,
         uint64 sequenceNumber,
         uint64 timestamp,
         uint64 number,
         uint256 baseFee,
-        uint256 blobBaseFee,
+        uint256 blobUnstableFee,
         bytes32 hash,
         bytes32 batcherHash
     )
         external
     {
         bytes memory functionCallDataPacked = Encoding.encodeSetL1BlockValuesEcotone(
-            baseFeeScalar, blobBaseFeeScalar, sequenceNumber, timestamp, number, baseFee, blobBaseFee, hash, batcherHash
+            baseFeeScalar, blobUnstableFeeScalar, sequenceNumber, timestamp, number, baseFee, blobUnstableFee, hash, batcherHash
         );
 
         vm.prank(depositor);
@@ -129,12 +129,12 @@ contract L1Block_SetL1BlockValuesEcotone_Test is L1Block_TestInit {
         assertTrue(success, "Function call failed");
 
         assertEq(l1Block.baseFeeScalar(), baseFeeScalar);
-        assertEq(l1Block.blobBaseFeeScalar(), blobBaseFeeScalar);
+        assertEq(l1Block.blobUnstableFeeScalar(), blobUnstableFeeScalar);
         assertEq(l1Block.sequenceNumber(), sequenceNumber);
         assertEq(l1Block.timestamp(), timestamp);
         assertEq(l1Block.number(), number);
         assertEq(l1Block.basefee(), baseFee);
-        assertEq(l1Block.blobBaseFee(), blobBaseFee);
+        assertEq(l1Block.blobUnstableFee(), blobUnstableFee);
         assertEq(l1Block.hash(), hash);
         assertEq(l1Block.batcherHash(), batcherHash);
 
@@ -188,12 +188,12 @@ contract L1Block_SetL1BlockValuesIsthmus_Test is L1Block_TestInit {
     /// @notice Tests that setL1BlockValuesIsthmus updates the values appropriately.
     function testFuzz_setL1BlockValuesIsthmus_succeeds(
         uint32 baseFeeScalar,
-        uint32 blobBaseFeeScalar,
+        uint32 blobUnstableFeeScalar,
         uint64 sequenceNumber,
         uint64 timestamp,
         uint64 number,
         uint256 baseFee,
-        uint256 blobBaseFee,
+        uint256 blobUnstableFee,
         bytes32 hash,
         bytes32 batcherHash,
         uint32 operatorFeeScalar,
@@ -203,12 +203,12 @@ contract L1Block_SetL1BlockValuesIsthmus_Test is L1Block_TestInit {
     {
         bytes memory functionCallDataPacked = Encoding.encodeSetL1BlockValuesIsthmus(
             baseFeeScalar,
-            blobBaseFeeScalar,
+            blobUnstableFeeScalar,
             sequenceNumber,
             timestamp,
             number,
             baseFee,
-            blobBaseFee,
+            blobUnstableFee,
             hash,
             batcherHash,
             operatorFeeScalar,
@@ -220,12 +220,12 @@ contract L1Block_SetL1BlockValuesIsthmus_Test is L1Block_TestInit {
         assertTrue(success, "Function call failed");
 
         assertEq(l1Block.baseFeeScalar(), baseFeeScalar);
-        assertEq(l1Block.blobBaseFeeScalar(), blobBaseFeeScalar);
+        assertEq(l1Block.blobUnstableFeeScalar(), blobUnstableFeeScalar);
         assertEq(l1Block.sequenceNumber(), sequenceNumber);
         assertEq(l1Block.timestamp(), timestamp);
         assertEq(l1Block.number(), number);
         assertEq(l1Block.basefee(), baseFee);
-        assertEq(l1Block.blobBaseFee(), blobBaseFee);
+        assertEq(l1Block.blobUnstableFee(), blobUnstableFee);
         assertEq(l1Block.hash(), hash);
         assertEq(l1Block.batcherHash(), batcherHash);
         assertEq(l1Block.operatorFeeScalar(), operatorFeeScalar);
@@ -285,12 +285,12 @@ contract L1Block_SetL1BlockValuesJovian_Test is L1Block_TestInit {
     /// @notice Struct to group parameters for L1BlockValuesJovian to avoid stack too deep.
     struct L1BlockValuesJovianParams {
         uint32 baseFeeScalar;
-        uint32 blobBaseFeeScalar;
+        uint32 blobUnstableFeeScalar;
         uint64 sequenceNumber;
         uint64 timestamp;
         uint64 number;
         uint256 baseFee;
-        uint256 blobBaseFee;
+        uint256 blobUnstableFee;
         bytes32 hash;
         bytes32 batcherHash;
         uint32 operatorFeeScalar;
@@ -302,12 +302,12 @@ contract L1Block_SetL1BlockValuesJovian_Test is L1Block_TestInit {
     function testFuzz_setL1BlockValuesJovian_succeeds(L1BlockValuesJovianParams memory params) external {
         bytes memory functionCallDataPacked = Encoding.encodeSetL1BlockValuesJovian(
             params.baseFeeScalar,
-            params.blobBaseFeeScalar,
+            params.blobUnstableFeeScalar,
             params.sequenceNumber,
             params.timestamp,
             params.number,
             params.baseFee,
-            params.blobBaseFee,
+            params.blobUnstableFee,
             params.hash,
             params.batcherHash,
             params.operatorFeeScalar,
@@ -320,12 +320,12 @@ contract L1Block_SetL1BlockValuesJovian_Test is L1Block_TestInit {
         assertTrue(success, "Function call failed");
 
         assertEq(l1Block.baseFeeScalar(), params.baseFeeScalar);
-        assertEq(l1Block.blobBaseFeeScalar(), params.blobBaseFeeScalar);
+        assertEq(l1Block.blobUnstableFeeScalar(), params.blobUnstableFeeScalar);
         assertEq(l1Block.sequenceNumber(), params.sequenceNumber);
         assertEq(l1Block.timestamp(), params.timestamp);
         assertEq(l1Block.number(), params.number);
         assertEq(l1Block.basefee(), params.baseFee);
-        assertEq(l1Block.blobBaseFee(), params.blobBaseFee);
+        assertEq(l1Block.blobUnstableFee(), params.blobUnstableFee);
         assertEq(l1Block.hash(), params.hash);
         assertEq(l1Block.batcherHash(), params.batcherHash);
         assertEq(l1Block.operatorFeeScalar(), params.operatorFeeScalar);

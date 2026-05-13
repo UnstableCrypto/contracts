@@ -28,7 +28,7 @@ import { MockVerifier } from "test/mocks/MockVerifier.sol";
 
 import { LibClone } from "lib/solady/src/utils/LibClone.sol";
 
-contract BaseTest is Test {
+contract UnstableTest is Test {
     using LibClone for address;
     // Constants
     GameType public constant AGGREGATE_VERIFIER_GAME_TYPE = GameType.wrap(621);

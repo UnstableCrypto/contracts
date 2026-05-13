@@ -7,7 +7,7 @@ import { L2Genesis } from "scripts/L2Genesis.s.sol";
 import { Predeploys } from "src/libraries/Predeploys.sol";
 import { LATEST_FORK } from "scripts/libraries/Config.sol";
 import { ISequencerFeeVault } from "interfaces/L2/ISequencerFeeVault.sol";
-import { IBaseFeeVault } from "interfaces/L2/IBaseFeeVault.sol";
+import { IUnstableFeeVault } from "interfaces/L2/IUnstableFeeVault.sol";
 import { IL1FeeVault } from "interfaces/L2/IL1FeeVault.sol";
 import { IOperatorFeeVault } from "interfaces/L2/IOperatorFeeVault.sol";
 import { IOptimismMintableERC20Factory } from "interfaces/universal/IOptimismMintableERC20Factory.sol";
@@ -72,7 +72,7 @@ abstract contract L2Genesis_TestInit is Test {
     }
 
     function testVaultsWithoutRevenueShare() internal view {
-        IBaseFeeVault baseFeeVault = IBaseFeeVault(payable(Predeploys.BASE_FEE_VAULT));
+        IUnstableFeeVault baseFeeVault = IUnstableFeeVault(payable(Predeploys.BASE_FEE_VAULT));
         IL1FeeVault l1FeeVault = IL1FeeVault(payable(Predeploys.L1_FEE_VAULT));
         ISequencerFeeVault sequencerFeeVault = ISequencerFeeVault(payable(Predeploys.SEQUENCER_FEE_WALLET));
         IOperatorFeeVault operatorFeeVault = IOperatorFeeVault(payable(Predeploys.OPERATOR_FEE_VAULT));

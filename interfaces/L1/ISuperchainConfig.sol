@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
-interface ISuperchainConfig is IProxyAdminOwnedBase {
+interface ISuperchainConfig is IProxyAdminOwnedUnstable {
     event Paused(address identifier);
     event Unpaused(address identifier);
     event PauseExtended(address identifier);

@@ -51,8 +51,8 @@ contract Constants_Test is Test {
         assertEq(config.maxResourceLimit, 20_000_000);
         assertEq(config.elasticityMultiplier, 10);
         assertEq(config.baseFeeMaxChangeDenominator, 8);
-        assertEq(config.minimumBaseFee, 1 gwei);
+        assertEq(config.minimumUnstableFee, 1 gwei);
         assertEq(config.systemTxMaxGas, 1_000_000);
-        assertEq(config.maximumBaseFee, type(uint128).max);
+        assertEq(config.maximumUnstableFee, type(uint128).max);
     }
 }

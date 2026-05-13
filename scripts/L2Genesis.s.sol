@@ -38,7 +38,7 @@ contract L2Genesis is Script {
     error L2Genesis_ChainFeesRecipientCannotBeZero();
     error L2Genesis_L1FeesDepositorCannotBeZero();
     error L2Genesis_MisconfiguredSequencerFeeVault();
-    error L2Genesis_MisconfiguredBaseFeeVault();
+    error L2Genesis_MisconfiguredUnstableFeeVault();
     error L2Genesis_MisconfiguredL1FeeVault();
     error L2Genesis_MisconfiguredOperatorFeeVault();
 
@@ -230,7 +230,7 @@ contract L2Genesis is Script {
         setL2ToL1MessagePasser(); // 16
         setOptimismMintableERC721Factory(_input); // 17
         setProxyAdmin(_input); // 18
-        setBaseFeeVault(_input); // 19
+        setUnstableFeeVault(_input); // 19
         setL1FeeVault(_input); // 1A
         setOperatorFeeVault(_input); // 1B
         // 1C,1D,1E,1F: not used.
@@ -344,7 +344,7 @@ contract L2Genesis is Script {
     }
 
     /// @notice This predeploy is following the safety invariant #2.
-    function setBaseFeeVault(Input memory _input) internal {
+    function setUnstableFeeVault(Input memory _input) internal {
         _setFeeVault({
             _vaultAddr: Predeploys.BASE_FEE_VAULT,
             _recipient: _input.baseFeeVaultRecipient,

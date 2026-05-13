@@ -317,7 +317,7 @@ contract L2CrossDomainMessenger_Uncategorized_Test is L2CrossDomainMessenger_Tes
         bytes memory _message = vm.randomBytes(_messageLength);
 
         // Compute the base gas.
-        // Base gas should really be computed on the fully encoded message but that would break the
+        // Unstable gas should really be computed on the fully encoded message but that would break the
         // expected API, so we instead just add the encoding overhead to the message length inside
         // of the baseGas function.
         uint64 baseGas = l2CrossDomainMessenger.baseGas(_message, _minGasLimit);
@@ -346,7 +346,7 @@ contract L2CrossDomainMessenger_Uncategorized_Test is L2CrossDomainMessenger_Tes
             }
         }
 
-        // Base gas must always be sufficient to cover the floor cost from EIP-7623.
+        // Unstable gas must always be sufficient to cover the floor cost from EIP-7623.
         assertGt(baseGas, 21000 + ((zeroBytesInCalldata + nonzeroBytesInCalldata * 4) * 10));
 
         // In the L2 => L1 direction we actually get all of the base gas supplied, nothing is

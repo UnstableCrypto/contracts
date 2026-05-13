@@ -15,11 +15,11 @@ import { Features } from "src/libraries/Features.sol";
 
 // Interfaces
 import { IETHLockbox } from "interfaces/L1/IETHLockbox.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 import { IOptimismPortal2 } from "interfaces/L1/IOptimismPortal2.sol";
 
 /// @title ETHLockbox_TestInit
-/// @notice Base contract that sets up the testing environment for ETHLockbox tests.
+/// @notice Unstable contract that sets up the testing environment for ETHLockbox tests.
 abstract contract ETHLockbox_TestInit is CommonTest {
     error InvalidInitialization();
 
@@ -91,8 +91,8 @@ contract ETHLockbox_Initialize_Test is ETHLockbox_TestInit {
         // Set the initialized slot to 0.
         vm.store(address(ethLockbox), bytes32(slot.slot), bytes32(0));
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner` selector
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner` selector
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
 
         // Call the `initialize` function with the sender
         vm.prank(_sender);
@@ -134,8 +134,8 @@ contract ETHLockbox_AuthorizePortal_Test is ETHLockbox_TestInit {
     function testFuzz_authorizePortal_unauthorized_reverts(address _caller) public {
         vm.assume(_caller != proxyAdminOwner);
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOwner` selector
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOwner` selector
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOwner.selector);
 
         // Call the `authorizePortal` function with an unauthorized caller
         vm.prank(_caller);
@@ -146,10 +146,10 @@ contract ETHLockbox_AuthorizePortal_Test is ETHLockbox_TestInit {
     ///         portal is not the same as the one of the lockbox.
     function testFuzz_authorizePortal_differentProxyAdminOwner_reverts(IOptimismPortal2 _portal) public {
         assumeNotForgeAddress(address(_portal));
-        vm.mockCall(address(_portal), abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(address(0)));
+        vm.mockCall(address(_portal), abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(address(0)));
 
         // Expect the revert with `DifferentOwner` selector
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotSharedProxyAdminOwner.selector);
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotSharedProxyAdminOwner.selector);
 
         // Call the `authorizePortal` function
         vm.prank(proxyAdminOwner);
@@ -166,7 +166,7 @@ contract ETHLockbox_AuthorizePortal_Test is ETHLockbox_TestInit {
 
         // Mock the portal to have the right proxyAdminOwner.
         vm.mockCall(
-            address(_portal), abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
+            address(_portal), abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
         );
 
         // Mock the portal to have the wrong SuperchainConfig.
@@ -210,7 +210,7 @@ contract ETHLockbox_AuthorizePortal_Test is ETHLockbox_TestInit {
         // Mock the admin owner of the portal to be the same as the current lockbox proxy admin
         // owner
         vm.mockCall(
-            address(_portal), abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
+            address(_portal), abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
         );
 
         // Mock the SuperchainConfig on the portal to be the same as the SuperchainConfig on the
@@ -248,7 +248,7 @@ contract ETHLockbox_ReceiveLiquidity_Test is ETHLockbox_TestInit {
         // Mock the admin owner of the lockbox to be the same as the current lockbox proxy admin
         // owner
         vm.mockCall(
-            address(_lockbox), abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
+            address(_lockbox), abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
         );
 
         // Authorize the lockbox if needed
@@ -326,7 +326,7 @@ contract ETHLockbox_LockETH_Test is ETHLockbox_TestInit {
         // Mock the admin owner of the portal to be the same as the current lockbox proxy admin
         // owner
         vm.mockCall(
-            address(_portal), abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
+            address(_portal), abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
         );
 
         // Mock the SuperchainConfig on the portal to be the same as the SuperchainConfig on the
@@ -455,7 +455,7 @@ contract ETHLockbox_UnlockETH_Test is ETHLockbox_TestInit {
         // Mock the admin owner of the portal to be the same as the current lockbox proxy admin
         // owner
         vm.mockCall(
-            address(_portal), abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
+            address(_portal), abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
         );
 
         // Mock the SuperchainConfig on the portal to be the same as the SuperchainConfig on the
@@ -505,8 +505,8 @@ contract ETHLockbox_AuthorizeLockbox_Test is ETHLockbox_TestInit {
     function testFuzz_authorizeLockbox_unauthorized_reverts(address _caller) public {
         vm.assume(_caller != proxyAdminOwner);
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOwner` selector
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOwner` selector
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOwner.selector);
 
         // Call the `authorizeLockbox` function with an unauthorized caller
         vm.prank(_caller);
@@ -518,10 +518,10 @@ contract ETHLockbox_AuthorizeLockbox_Test is ETHLockbox_TestInit {
     function testFuzz_authorizeLockbox_differentProxyAdminOwner_reverts(address _lockbox) public {
         assumeNotForgeAddress(_lockbox);
 
-        vm.mockCall(address(_lockbox), abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(address(0)));
+        vm.mockCall(address(_lockbox), abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(address(0)));
 
         // Expect the revert with `NotSharedProxyAdminOwner` selector
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotSharedProxyAdminOwner.selector);
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotSharedProxyAdminOwner.selector);
 
         // Call the `authorizeLockbox` function with the lockbox
         vm.prank(proxyAdminOwner);
@@ -535,7 +535,7 @@ contract ETHLockbox_AuthorizeLockbox_Test is ETHLockbox_TestInit {
         // Mock the admin owner of the lockbox to be the same as the current lockbox proxy admin
         // owner
         vm.mockCall(
-            address(_lockbox), abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
+            address(_lockbox), abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(proxyAdminOwner)
         );
 
         // Expect the `LockboxAuthorized` event to be emitted
@@ -559,8 +559,8 @@ contract ETHLockbox_MigrateLiquidity_Test is ETHLockbox_TestInit {
     function testFuzz_migrateLiquidity_unauthorized_reverts(address _caller) public {
         vm.assume(_caller != proxyAdminOwner);
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOwner` selector
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOwner` selector
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOwner.selector);
 
         // Call the `migrateLiquidity` function with an unauthorized caller
         vm.prank(_caller);
@@ -572,10 +572,10 @@ contract ETHLockbox_MigrateLiquidity_Test is ETHLockbox_TestInit {
     function testFuzz_migrateLiquidity_differentProxyAdminOwner_reverts(address _lockbox) public {
         assumeNotForgeAddress(_lockbox);
 
-        vm.mockCall(address(_lockbox), abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()), abi.encode(address(0)));
+        vm.mockCall(address(_lockbox), abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()), abi.encode(address(0)));
 
         // Expect the revert with `NotSharedProxyAdminOwner` selector
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotSharedProxyAdminOwner.selector);
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotSharedProxyAdminOwner.selector);
 
         // Call the `migrateLiquidity` function with the lockbox
         vm.prank(proxyAdminOwner);
@@ -614,7 +614,7 @@ contract ETHLockbox_MigrateLiquidity_Test is ETHLockbox_TestInit {
         // Mock the calls for checks on the destination lockbox so it can receive the migration
         vm.mockCall(
             address(destinationLockbox),
-            abi.encodeCall(IProxyAdminOwnedBase.proxyAdminOwner, ()),
+            abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdminOwner, ()),
             abi.encode(proxyAdminOwner)
         );
         vm.mockCall(

@@ -23,7 +23,7 @@ import { IL1CrossDomainMessenger } from "interfaces/L1/IL1CrossDomainMessenger.s
 import { IL1ERC721Bridge } from "interfaces/L1/IL1ERC721Bridge.sol";
 import { IL1StandardBridge } from "interfaces/L1/IL1StandardBridge.sol";
 import { IOptimismPortal2 } from "interfaces/L1/IOptimismPortal2.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 import { IResourceMetering } from "interfaces/L1/IResourceMetering.sol";
 import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
@@ -116,8 +116,8 @@ abstract contract StandardSystemAssertions is Test {
         assertEq(outputConfig.elasticityMultiplier, expectedConfig.elasticityMultiplier, "SYSCON-60");
         assertEq(outputConfig.baseFeeMaxChangeDenominator, expectedConfig.baseFeeMaxChangeDenominator, "SYSCON-70");
         assertEq(outputConfig.systemTxMaxGas, expectedConfig.systemTxMaxGas, "SYSCON-80");
-        assertEq(outputConfig.minimumBaseFee, expectedConfig.minimumBaseFee, "SYSCON-90");
-        assertEq(outputConfig.maximumBaseFee, expectedConfig.maximumBaseFee, "SYSCON-100");
+        assertEq(outputConfig.minimumUnstableFee, expectedConfig.minimumUnstableFee, "SYSCON-90");
+        assertEq(outputConfig.maximumUnstableFee, expectedConfig.maximumUnstableFee, "SYSCON-100");
         assertEq(sysCfg.operatorFeeScalar(), 0, "SYSCON-110");
         assertEq(sysCfg.operatorFeeConstant(), 0, "SYSCON-120");
         assertEq(address(sysCfg.superchainConfig()), address(_expected.superchainConfig), "SYSCON-130");
@@ -461,7 +461,7 @@ abstract contract StandardSystemAssertions is Test {
     }
 
     function _proxyAdminFor(address _contract) private view returns (IProxyAdmin) {
-        return IProxyAdminOwnedBase(_contract).proxyAdmin();
+        return IProxyAdminOwnedUnstable(_contract).proxyAdmin();
     }
 
     function _version(address _contract) private view returns (string memory) {

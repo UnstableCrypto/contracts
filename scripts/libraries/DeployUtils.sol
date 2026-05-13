@@ -17,7 +17,7 @@ import { IProxy } from "interfaces/universal/IProxy.sol";
 import { IAddressManager } from "interfaces/legacy/IAddressManager.sol";
 import { IL1ChugSplashProxy, IStaticL1ChugSplashProxy } from "interfaces/legacy/IL1ChugSplashProxy.sol";
 import { IResolvedDelegateProxy } from "interfaces/legacy/IResolvedDelegateProxy.sol";
-import { IReinitializableBase } from "interfaces/universal/IReinitializableBase.sol";
+import { IReinitializableUnstable } from "interfaces/universal/IReinitializableUnstable.sol";
 
 library DeployUtils {
     Vm internal constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
@@ -373,7 +373,7 @@ library DeployUtils {
             require(gasleft() > 200_000, "DeployUtils: insufficient gas for initVersion() call");
 
             // eip150-safe
-            try IReinitializableBase(_contractAddress).initVersion() returns (uint8 initVersion_) {
+            try IReinitializableUnstable(_contractAddress).initVersion() returns (uint8 initVersion_) {
                 require(val == initVersion_, "DeployUtils: storage value is incorrect at the given slot and offset");
             } catch {
                 require(val == 1, "DeployUtils: storage value is not set at the given slot and offset");

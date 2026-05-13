@@ -30,21 +30,21 @@ import { IOptimismMintableERC20Factory } from "interfaces/universal/IOptimismMin
 import { IPreimageOracle } from "interfaces/cannon/IPreimageOracle.sol";
 import { IMIPS64 } from "interfaces/cannon/IMIPS64.sol";
 import { IETHLockbox } from "interfaces/L1/IETHLockbox.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 import { IAnchorStateRegistry } from "interfaces/L1/proofs/IAnchorStateRegistry.sol";
 
 library ChainAssertions {
     Vm internal constant vm = Vm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
-    /// @notice Checks that a call to the proxyAdmin function on a contract that follows the ProxyAdminOwnedBase
+    /// @notice Checks that a call to the proxyAdmin function on a contract that follows the ProxyAdminOwnedUnstable
     /// interface fails.
     /// @dev This is used to check that the proxyAdmin is not set on the contract. E.g Implementation contracts.
-    /// @param _contract The address of the contract that follows the ProxyAdminOwnedBase interface.
+    /// @param _contract The address of the contract that follows the ProxyAdminOwnedUnstable interface.
     /// @param _errorSelector The error selector to check for.
     /// @return true if the call fails with the error selector, false otherwise.
     function checkProxyAdminCallFails(address _contract, bytes4 _errorSelector) internal view returns (bool) {
         (bool success, bytes memory data) =
-            address(_contract).staticcall(abi.encodeCall(IProxyAdminOwnedBase.proxyAdmin, ()));
+            address(_contract).staticcall(abi.encodeCall(IProxyAdminOwnedUnstable.proxyAdmin, ()));
         return (!success && data.length == 4 && bytes4(data) == _errorSelector);
     }
 
@@ -71,8 +71,8 @@ library ChainAssertions {
         require(resourceConfig.elasticityMultiplier == 0, "CHECK-SCFG-310");
         require(resourceConfig.baseFeeMaxChangeDenominator == 0, "CHECK-SCFG-320");
         require(resourceConfig.systemTxMaxGas == 0, "CHECK-SCFG-330");
-        require(resourceConfig.minimumBaseFee == 0, "CHECK-SCFG-340");
-        require(resourceConfig.maximumBaseFee == 0, "CHECK-SCFG-350");
+        require(resourceConfig.minimumUnstableFee == 0, "CHECK-SCFG-340");
+        require(resourceConfig.maximumUnstableFee == 0, "CHECK-SCFG-350");
         // Check _addresses
         require(config.startBlock() == type(uint256).max, "CHECK-SCFG-360");
         require(config.batchInbox() == address(0), "CHECK-SCFG-370");
@@ -99,7 +99,7 @@ library ChainAssertions {
 
         require(config.owner() == _doi.systemConfigOwner, "CHECK-SCFG-10");
         require(config.basefeeScalar() == _doi.basefeeScalar, "CHECK-SCFG-20");
-        require(config.blobbasefeeScalar() == _doi.blobBaseFeeScalar, "CHECK-SCFG-30");
+        require(config.blobbasefeeScalar() == _doi.blobUnstableFeeScalar, "CHECK-SCFG-30");
         require(config.batcherHash() == bytes32(uint256(uint160(_doi.batcher))), "CHECK-SCFG-40");
         require(config.gasLimit() == uint64(_doi.gasLimit), "CHECK-SCFG-50");
         require(config.unsafeBlockSigner() == _doi.unsafeBlockSigner, "CHECK-SCFG-60");
@@ -140,7 +140,7 @@ library ChainAssertions {
             require(address(_messenger.systemConfig()) == address(0), "CHECK-L1XDM-120");
             require(
                 checkProxyAdminCallFails(
-                    address(_messenger), IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotResolvedDelegateProxy.selector
+                    address(_messenger), IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotResolvedDelegateProxy.selector
                 ),
                 "CHECK-L1XDM-130"
             );
@@ -239,7 +239,7 @@ library ChainAssertions {
         require(address(_bridge.systemConfig()) == address(0), "CHECK-L1ERC721B-100");
         require(
             checkProxyAdminCallFails(
-                address(_bridge), IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotResolvedDelegateProxy.selector
+                address(_bridge), IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotResolvedDelegateProxy.selector
             ),
             "CHECK-L1XDM-130"
         );

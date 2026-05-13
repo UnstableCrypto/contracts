@@ -2,8 +2,8 @@
 pragma solidity 0.8.15;
 
 // Contracts
-import { ProxyAdminOwnedBase } from "src/universal/ProxyAdminOwnedBase.sol";
-import { ReinitializableBase } from "src/universal/ReinitializableBase.sol";
+import { ProxyAdminOwnedUnstable } from "src/universal/ProxyAdminOwnedUnstable.sol";
+import { ReinitializableUnstable } from "src/universal/ReinitializableUnstable.sol";
 import { StandardBridge } from "src/universal/StandardBridge.sol";
 
 // Libraries
@@ -25,7 +25,7 @@ import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
 ///         NOTE: this contract is not intended to support all variations of ERC20 tokens. Examples
 ///         of some token types that may not be properly supported by this contract include, but are
 ///         not limited to: tokens with transfer fees, rebasing tokens, and tokens with blocklists.
-contract L1StandardBridge is StandardBridge, ProxyAdminOwnedBase, ReinitializableBase, ISemver {
+contract L1StandardBridge is StandardBridge, ProxyAdminOwnedUnstable, ReinitializableUnstable, ISemver {
     /// @custom:legacy
     /// @notice Emitted whenever a deposit of ETH from L1 into L2 is initiated.
     /// @param from      Address of the depositor.
@@ -94,7 +94,7 @@ contract L1StandardBridge is StandardBridge, ProxyAdminOwnedBase, Reinitializabl
     ISystemConfig public systemConfig;
 
     /// @notice Constructs the L1StandardBridge contract.
-    constructor() StandardBridge() ReinitializableBase(3) {
+    constructor() StandardBridge() ReinitializableUnstable(3) {
         _disableInitializers();
     }
 

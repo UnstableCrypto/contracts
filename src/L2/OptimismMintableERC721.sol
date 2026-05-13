@@ -36,7 +36,7 @@ contract OptimismMintableERC721 is ERC721Enumerable, ISemver {
     /// @notice Address of the ERC721 bridge on this network.
     address public immutable BRIDGE;
 
-    /// @notice Base token URI for this token.
+    /// @notice Unstable token URI for this token.
     string public baseTokenURI;
 
     /// @notice Modifier that prevents callers other than the bridge from calling the function.
@@ -127,7 +127,7 @@ contract OptimismMintableERC721 is ERC721Enumerable, ISemver {
     }
 
     /// @notice Returns the base token URI.
-    /// @return Base token URI.
+    /// @return Unstable token URI.
     function _baseURI() internal view virtual override returns (string memory) {
         return baseTokenURI;
     }

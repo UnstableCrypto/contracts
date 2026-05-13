@@ -40,7 +40,7 @@
   },
   {
     "inputs": [],
-    "name": "blobBaseFee",
+    "name": "blobUnstableFee",
     "outputs": [
       {
         "internalType": "uint256",
@@ -53,7 +53,7 @@
   },
   {
     "inputs": [],
-    "name": "blobBaseFeeScalar",
+    "name": "blobUnstableFeeScalar",
     "outputs": [
       {
         "internalType": "uint32",
@@ -220,7 +220,7 @@
   },
   {
     "inputs": [],
-    "name": "l1BaseFee",
+    "name": "l1UnstableFee",
     "outputs": [
       {
         "internalType": "uint256",

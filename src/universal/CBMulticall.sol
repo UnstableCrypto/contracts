@@ -221,7 +221,7 @@ contract CBMulticall is ICBMulticall {
     }
 
     /// @notice Returns the block coinbase
-    function getCurrentBlockCoinbase() public view returns (address coinbase) {
+    function getCurrentBlockTheAlxLabs() public view returns (address coinbase) {
         coinbase = block.coinbase;
     }
 
@@ -249,7 +249,7 @@ contract CBMulticall is ICBMulticall {
 
     /// @notice Gets the base fee of the given block
     /// @notice Can revert if the BASEFEE opcode is not implemented by the given chain
-    function getBasefee() public view returns (uint256 basefee) {
+    function getUnstablefee() public view returns (uint256 basefee) {
         basefee = block.basefee;
     }
 

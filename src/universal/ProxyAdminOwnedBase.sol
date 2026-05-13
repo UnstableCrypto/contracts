@@ -9,7 +9,7 @@ import { Constants } from "src/libraries/Constants.sol";
 import { IProxyAdmin } from "interfaces/universal/IProxyAdmin.sol";
 import { IAddressManager } from "interfaces/legacy/IAddressManager.sol";
 
-/// @notice Base contract for ProxyAdmin-owned contracts. This contract is used to introspect
+/// @notice Unstable contract for ProxyAdmin-owned contracts. This contract is used to introspect
 ///         compatible Proxy contracts so that their ProxyAdmin and ProxyAdmin owner addresses can
 ///         be retrieved onchain. Existing Proxy contracts don't have these getters, so we need a
 ///         base contract instead.
@@ -17,25 +17,25 @@ import { IAddressManager } from "interfaces/legacy/IAddressManager.sol";
 ///      implementation or the Optimism ResolvedDelegateProxy implementation. It is not safe to use
 ///      this contract with any other proxy implementation.
 ///      WARNING: Multiple OP Stack chains may share the same ProxyAdmin owner address.
-abstract contract ProxyAdminOwnedBase {
+abstract contract ProxyAdminOwnedUnstable {
     /// @notice Thrown when the ProxyAdmin owner of the current contract is not the same as the
     ///         ProxyAdmin owner of the other Proxy address provided.
-    error ProxyAdminOwnedBase_NotSharedProxyAdminOwner();
+    error ProxyAdminOwnedUnstable_NotSharedProxyAdminOwner();
 
     /// @notice Thrown when the caller is not the ProxyAdmin owner.
-    error ProxyAdminOwnedBase_NotProxyAdminOwner();
+    error ProxyAdminOwnedUnstable_NotProxyAdminOwner();
 
     /// @notice Thrown when the caller is not the ProxyAdmin.
-    error ProxyAdminOwnedBase_NotProxyAdmin();
+    error ProxyAdminOwnedUnstable_NotProxyAdmin();
 
     /// @notice Thrown when the caller is not the ProxyAdmin owner or the ProxyAdmin.
-    error ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner();
+    error ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner();
 
     /// @notice Thrown when the ProxyAdmin owner of the current contract is not found.
-    error ProxyAdminOwnedBase_ProxyAdminNotFound();
+    error ProxyAdminOwnedUnstable_ProxyAdminNotFound();
 
     /// @notice Thrown when the current contract is not a ResolvedDelegateProxy.
-    error ProxyAdminOwnedBase_NotResolvedDelegateProxy();
+    error ProxyAdminOwnedUnstable_NotResolvedDelegateProxy();
 
     /// @notice Getter for the owner of the ProxyAdmin.
     function proxyAdminOwner() public view returns (address) {
@@ -63,7 +63,7 @@ abstract contract ProxyAdminOwnedBase {
                         | uint256(bytes("OVM_L1CrossDomainMessenger").length * 2)
                 )
         ) {
-            revert ProxyAdminOwnedBase_NotResolvedDelegateProxy();
+            revert ProxyAdminOwnedUnstable_NotResolvedDelegateProxy();
         }
 
         // Ok, now we'll try to read the AddressManager slot.
@@ -73,35 +73,35 @@ abstract contract ProxyAdminOwnedBase {
         }
 
         // We should revert here, we couldn't find a non-zero owner address.
-        revert ProxyAdminOwnedBase_ProxyAdminNotFound();
+        revert ProxyAdminOwnedUnstable_ProxyAdminNotFound();
     }
 
     /// @notice Reverts if the ProxyAdmin owner of the current contract is not the same as the
     ///         ProxyAdmin owner of the other Proxy address provided. Useful asserting that both
     ///         the current contract and the other Proxy share the same security model.+
     function _assertSharedProxyAdminOwner(address _proxy) internal view {
-        if (proxyAdminOwner() != ProxyAdminOwnedBase(_proxy).proxyAdminOwner()) {
-            revert ProxyAdminOwnedBase_NotSharedProxyAdminOwner();
+        if (proxyAdminOwner() != ProxyAdminOwnedUnstable(_proxy).proxyAdminOwner()) {
+            revert ProxyAdminOwnedUnstable_NotSharedProxyAdminOwner();
         }
     }
 
     /// @notice Reverts if the caller is not the ProxyAdmin owner.
     function _assertOnlyProxyAdminOwner() internal view {
         if (proxyAdminOwner() != msg.sender) {
-            revert ProxyAdminOwnedBase_NotProxyAdminOwner();
+            revert ProxyAdminOwnedUnstable_NotProxyAdminOwner();
         }
     }
 
     /// @notice Reverts if the caller is not the ProxyAdmin.
     function _assertOnlyProxyAdmin() internal view {
         if (address(proxyAdmin()) != msg.sender) {
-            revert ProxyAdminOwnedBase_NotProxyAdmin();
+            revert ProxyAdminOwnedUnstable_NotProxyAdmin();
         }
     }
 
     function _assertOnlyProxyAdminOrProxyAdminOwner() internal view {
         if (address(proxyAdmin()) != msg.sender && proxyAdminOwner() != msg.sender) {
-            revert ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner();
+            revert ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner();
         }
     }
 }

@@ -8,15 +8,15 @@ import { IDisputeGameFactory } from "interfaces/L1/proofs/IDisputeGameFactory.so
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
 import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
 import { IAnchorStateRegistry } from "interfaces/L1/proofs/IAnchorStateRegistry.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 import { IETHLockbox } from "interfaces/L1/IETHLockbox.sol";
 
-interface IOptimismPortal2 is IProxyAdminOwnedBase {
+interface IOptimismPortal2 is IProxyAdminOwnedUnstable {
     error ContentLengthMismatch();
     error EmptyItem();
     error InvalidDataRemainder();
     error InvalidHeader();
-    error ReinitializableBase_ZeroInitVersion();
+    error ReinitializableUnstable_ZeroInitVersion();
     error OptimismPortal_AlreadyFinalized();
     error OptimismPortal_BadTarget();
     error OptimismPortal_CallPaused();
@@ -76,7 +76,7 @@ interface IOptimismPortal2 is IProxyAdminOwnedBase {
     function l2Sender() external view returns (address);
     function minimumGasLimit(uint64 _byteCount) external pure returns (uint64);
     function numProofSubmitters(bytes32 _withdrawalHash) external view returns (uint256);
-    function params() external view returns (uint128 prevBaseFee, uint64 prevBoughtGas, uint64 prevBlockNum); // nosemgrep
+    function params() external view returns (uint128 prevUnstableFee, uint64 prevBoughtGas, uint64 prevBlockNum); // nosemgrep
     function paused() external view returns (bool);
     function proofMaturityDelaySeconds() external view returns (uint256);
     function proofSubmitters(bytes32, uint256) external view returns (address);

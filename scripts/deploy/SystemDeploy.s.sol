@@ -566,7 +566,7 @@ contract SystemDeploy is Script {
             (
                 _input.roles.systemConfigOwner,
                 _input.basefeeScalar,
-                _input.blobBasefeeScalar,
+                _input.blobUnstablefeeScalar,
                 bytes32(uint256(uint160(_input.roles.batcher))),
                 _input.gasLimit,
                 _input.roles.unsafeBlockSigner,

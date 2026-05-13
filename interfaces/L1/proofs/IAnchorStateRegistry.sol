@@ -7,12 +7,12 @@ import { IDisputeGameFactory } from "interfaces/L1/proofs/IDisputeGameFactory.so
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
 import { GameType, Hash, Proposal } from "src/libraries/bridge/Types.sol";
 import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
-interface IAnchorStateRegistry is IProxyAdminOwnedBase {
+interface IAnchorStateRegistry is IProxyAdminOwnedUnstable {
     error AnchorStateRegistry_InvalidAnchorGame();
     error AnchorStateRegistry_Unauthorized();
-    error ReinitializableBase_ZeroInitVersion();
+    error ReinitializableUnstable_ZeroInitVersion();
 
     event AnchorUpdated(IFaultDisputeGameV2 indexed game);
     event DisputeGameBlacklisted(IDisputeGame indexed disputeGame);

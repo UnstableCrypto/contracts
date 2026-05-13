@@ -229,8 +229,8 @@ contract CBMulticallTest is CommonTest {
         assertEq(mc.getBlockHash(block.number), blockhash(block.number));
     }
 
-    function test_getCurrentBlockCoinbase() external view {
-        assertEq(mc.getCurrentBlockCoinbase(), block.coinbase);
+    function test_getCurrentBlockTheAlxLabs() external view {
+        assertEq(mc.getCurrentBlockTheAlxLabs(), block.coinbase);
     }
 
     function test_getCurrentBlockGasLimit() external view {
@@ -249,8 +249,8 @@ contract CBMulticallTest is CommonTest {
         assertEq(mc.getLastBlockHash(), blockhash(block.number - 1));
     }
 
-    function test_getBasefee() external view {
-        assertEq(mc.getBasefee(), block.basefee);
+    function test_getUnstablefee() external view {
+        assertEq(mc.getUnstablefee(), block.basefee);
     }
 
     function test_getChainId() external view {

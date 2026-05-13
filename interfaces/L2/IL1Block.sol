@@ -6,8 +6,8 @@ interface IL1Block {
     function baseFeeScalar() external view returns (uint32);
     function basefee() external view returns (uint256);
     function batcherHash() external view returns (bytes32);
-    function blobBaseFee() external view returns (uint256);
-    function blobBaseFeeScalar() external view returns (uint32);
+    function blobUnstableFee() external view returns (uint256);
+    function blobUnstableFeeScalar() external view returns (uint32);
     function gasPayingToken() external pure returns (address addr_, uint8 decimals_);
     function gasPayingTokenName() external pure returns (string memory name_);
     function gasPayingTokenSymbol() external pure returns (string memory symbol_);

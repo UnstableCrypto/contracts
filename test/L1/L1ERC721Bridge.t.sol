@@ -17,7 +17,7 @@ import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
 import { ICrossDomainMessenger } from "interfaces/universal/ICrossDomainMessenger.sol";
 import { IL1ERC721Bridge } from "interfaces/L1/IL1ERC721Bridge.sol";
 import { IL2ERC721Bridge } from "interfaces/L2/IL2ERC721Bridge.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
 /// @notice Test ERC721 contract.
 contract L1ERC721Bridge_TestERC721_Harness is ERC721 {
@@ -130,8 +130,8 @@ contract L1ERC721Bridge_Initialize_Test is L1ERC721Bridge_TestInit {
         // Set the initialized slot to 0.
         vm.store(address(l1ERC721Bridge), bytes32(slot.slot), bytes32(0));
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner` selector
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner` selector
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
 
         // Call the `initialize` function with the sender
         vm.prank(_sender);

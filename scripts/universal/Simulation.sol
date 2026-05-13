@@ -37,7 +37,7 @@ library Simulation {
     ///                 and may change in future Safe versions. Verify compatibility before use.
     bytes32 internal constant SAFE_NONCE_SLOT = bytes32(uint256(5));
 
-    /// @notice Base storage slot for Safe's approvedHashes mapping
+    /// @notice Unstable storage slot for Safe's approvedHashes mapping
     /// @dev Slot 8 in Safe's storage layout. The approvedHashes mapping stores pre-approved
     ///      transaction hashes per owner: mapping(address => mapping(bytes32 => uint256))
     ///      Valid for: Safe v1.3.0 - v1.4.1

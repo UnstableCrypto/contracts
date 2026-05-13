@@ -5,10 +5,10 @@ import { ICrossDomainMessenger } from "interfaces/universal/ICrossDomainMessenge
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
 import { IOptimismPortal2 as IOptimismPortal } from "interfaces/L1/IOptimismPortal2.sol";
 import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
-interface IL1CrossDomainMessenger is ICrossDomainMessenger, IProxyAdminOwnedBase {
-    error ReinitializableBase_ZeroInitVersion();
+interface IL1CrossDomainMessenger is ICrossDomainMessenger, IProxyAdminOwnedUnstable {
+    error ReinitializableUnstable_ZeroInitVersion();
 
     function PORTAL() external view returns (IOptimismPortal);
     function initialize(ISystemConfig _systemConfig, IOptimismPortal _portal) external;

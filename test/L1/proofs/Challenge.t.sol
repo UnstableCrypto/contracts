@@ -9,9 +9,9 @@ import { Claim, GameStatus, Hash } from "src/libraries/bridge/Types.sol";
 import { AggregateVerifier } from "src/L1/proofs/AggregateVerifier.sol";
 import { Verifier } from "src/L1/proofs/Verifier.sol";
 
-import { BaseTest } from "./BaseTest.t.sol";
+import { UnstableTest } from "./UnstableTest.t.sol";
 
-contract ChallengeTest is BaseTest {
+contract ChallengeTest is UnstableTest {
     function testChallengeTEEProofWithZKProof() public {
         currentL2BlockNumber += BLOCK_INTERVAL;
 

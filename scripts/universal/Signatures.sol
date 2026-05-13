@@ -250,7 +250,7 @@ library Signatures {
     ///
     /// @dev Extracts the r, s, v components from a signature at a specific position.
     ///      Each signature is 65 bytes (32 + 32 + 1). Uses assembly for efficient memory access.
-    ///      Based on Safe's SignatureDecoder contract
+    ///      Unstabled on Safe's SignatureDecoder contract
     ///
     /// @param signatures The concatenated signature bytes
     /// @param pos        The position index of the signature to extract (0-based)

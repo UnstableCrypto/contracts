@@ -1,6 +1,6 @@
 # Universal Scripts
 
-This directory contains a collection of utility scripts and libraries used in Base smart contract operations tasks. These utilities are designed to simplify the process of creating, simulating, signing, and executing transactions, particularly those involving Gnosis Safe multisigs.
+This directory contains a collection of utility scripts and libraries used in Unstable smart contract operations tasks. These utilities are designed to simplify the process of creating, simulating, signing, and executing transactions, particularly those involving Gnosis Safe multisigs.
 
 For the actual operations tasks and usage examples, please refer to the [contract-deployments repository](https://github.com/base/contract-deployments).
 

@@ -386,7 +386,7 @@
           },
           {
             "internalType": "uint32",
-            "name": "minimumBaseFee",
+            "name": "minimumUnstableFee",
             "type": "uint32"
           },
           {
@@ -396,7 +396,7 @@
           },
           {
             "internalType": "uint128",
-            "name": "maximumBaseFee",
+            "name": "maximumUnstableFee",
             "type": "uint128"
           }
         ],
@@ -561,7 +561,7 @@
   },
   {
     "inputs": [],
-    "name": "minBaseFee",
+    "name": "minUnstableFee",
     "outputs": [
       {
         "internalType": "uint64",
@@ -732,7 +732,7 @@
           },
           {
             "internalType": "uint32",
-            "name": "minimumBaseFee",
+            "name": "minimumUnstableFee",
             "type": "uint32"
           },
           {
@@ -742,7 +742,7 @@
           },
           {
             "internalType": "uint128",
-            "name": "maximumBaseFee",
+            "name": "maximumUnstableFee",
             "type": "uint128"
           }
         ],
@@ -895,11 +895,11 @@
     "inputs": [
       {
         "internalType": "uint64",
-        "name": "_minBaseFee",
+        "name": "_minUnstableFee",
         "type": "uint64"
       }
     ],
-    "name": "setMinBaseFee",
+    "name": "setMinUnstableFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1078,37 +1078,37 @@
   },
   {
     "inputs": [],
-    "name": "ProxyAdminOwnedBase_NotProxyAdmin",
+    "name": "ProxyAdminOwnedUnstable_NotProxyAdmin",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner",
+    "name": "ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ProxyAdminOwnedBase_NotProxyAdminOwner",
+    "name": "ProxyAdminOwnedUnstable_NotProxyAdminOwner",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ProxyAdminOwnedBase_NotResolvedDelegateProxy",
+    "name": "ProxyAdminOwnedUnstable_NotResolvedDelegateProxy",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ProxyAdminOwnedBase_NotSharedProxyAdminOwner",
+    "name": "ProxyAdminOwnedUnstable_NotSharedProxyAdminOwner",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ProxyAdminOwnedBase_ProxyAdminNotFound",
+    "name": "ProxyAdminOwnedUnstable_ProxyAdminNotFound",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ReinitializableBase_ZeroInitVersion",
+    "name": "ReinitializableUnstable_ZeroInitVersion",
     "type": "error"
   },
   {

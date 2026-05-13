@@ -19,11 +19,11 @@ abstract contract ResourceMetering is Initializable {
 
     /// @notice Represents the various parameters that control the way in which resources are
     ///         metered. Corresponds to the EIP-1559 resource metering system.
-    /// @custom:field prevBaseFee   Base fee from the previous block(s).
+    /// @custom:field prevUnstableFee   Unstable fee from the previous block(s).
     /// @custom:field prevBoughtGas Amount of gas bought so far in the current block.
     /// @custom:field prevBlockNum  Last block number that the base fee was updated.
     struct ResourceParams {
-        uint128 prevBaseFee;
+        uint128 prevUnstableFee;
         uint64 prevBoughtGas;
         uint64 prevBlockNum;
     }
@@ -38,21 +38,21 @@ abstract contract ResourceMetering is Initializable {
     /// @custom:field elasticityMultiplier         Determines the target resource limit along with
     ///                                            the resource limit.
     /// @custom:field baseFeeMaxChangeDenominator  Determines max change on fee per block.
-    /// @custom:field minimumBaseFee               The min deposit base fee, it is clamped to this
+    /// @custom:field minimumUnstableFee               The min deposit base fee, it is clamped to this
     ///                                            value.
     /// @custom:field systemTxMaxGas               The amount of gas supplied to the system
     ///                                            transaction. This should be set to the same
     ///                                            number that the op-node sets as the gas limit
     ///                                            for the system transaction.
-    /// @custom:field maximumBaseFee               The max deposit base fee, it is clamped to this
+    /// @custom:field maximumUnstableFee               The max deposit base fee, it is clamped to this
     ///                                            value.
     struct ResourceConfig {
         uint32 maxResourceLimit;
         uint8 elasticityMultiplier;
         uint8 baseFeeMaxChangeDenominator;
-        uint32 minimumBaseFee;
+        uint32 minimumUnstableFee;
         uint32 systemTxMaxGas;
-        uint128 maximumBaseFee;
+        uint128 maximumUnstableFee;
     }
 
     /// @notice EIP-1559 style gas parameters.
@@ -90,15 +90,15 @@ abstract contract ResourceMetering is Initializable {
             // at which deposits can be created and therefore limit the potential for deposits to
             // spam the L2 system. Fee scheme is very similar to EIP-1559 with minor changes.
             int256 gasUsedDelta = int256(uint256(params.prevBoughtGas)) - targetResourceLimit;
-            int256 baseFeeDelta = (int256(uint256(params.prevBaseFee)) * gasUsedDelta)
+            int256 baseFeeDelta = (int256(uint256(params.prevUnstableFee)) * gasUsedDelta)
                 / (targetResourceLimit * int256(uint256(config.baseFeeMaxChangeDenominator)));
 
             // Update base fee by adding the base fee delta and clamp the resulting value between
             // min and max.
-            int256 newBaseFee = Arithmetic.clamp({
-                _value: int256(uint256(params.prevBaseFee)) + baseFeeDelta,
-                _min: int256(uint256(config.minimumBaseFee)),
-                _max: int256(uint256(config.maximumBaseFee))
+            int256 newUnstableFee = Arithmetic.clamp({
+                _value: int256(uint256(params.prevUnstableFee)) + baseFeeDelta,
+                _min: int256(uint256(config.minimumUnstableFee)),
+                _max: int256(uint256(config.maximumUnstableFee))
             });
 
             // If we skipped more than one block, we also need to account for every empty block.
@@ -108,19 +108,19 @@ abstract contract ResourceMetering is Initializable {
                 // Update the base fee by repeatedly applying the exponent 1-(1/change_denominator)
                 // blockDiff - 1 times. Simulates multiple empty blocks. Clamp the resulting value
                 // between min and max.
-                newBaseFee = Arithmetic.clamp({
+                newUnstableFee = Arithmetic.clamp({
                     _value: Arithmetic.cdexp({
-                        _coefficient: newBaseFee,
+                        _coefficient: newUnstableFee,
                         _denominator: int256(uint256(config.baseFeeMaxChangeDenominator)),
                         _exponent: int256(blockDiff - 1)
                     }),
-                    _min: int256(uint256(config.minimumBaseFee)),
-                    _max: int256(uint256(config.maximumBaseFee))
+                    _min: int256(uint256(config.minimumUnstableFee)),
+                    _max: int256(uint256(config.maximumUnstableFee))
                 });
             }
 
             // Update new base fee, reset bought gas, and update block number.
-            params.prevBaseFee = uint128(uint256(newBaseFee));
+            params.prevUnstableFee = uint128(uint256(newUnstableFee));
             params.prevBoughtGas = 0;
             params.prevBlockNum = uint64(block.number);
         }
@@ -132,7 +132,7 @@ abstract contract ResourceMetering is Initializable {
         }
 
         // Determine the amount of ETH to be paid.
-        uint256 resourceCost = uint256(_amount) * uint256(params.prevBaseFee);
+        uint256 resourceCost = uint256(_amount) * uint256(params.prevUnstableFee);
 
         // We currently charge for this ETH amount as an L1 gas burn, so we convert the ETH amount
         // into gas by dividing by the L1 base fee. We assume a minimum base fee of 1 gwei to avoid
@@ -167,7 +167,7 @@ abstract contract ResourceMetering is Initializable {
     ///         child contract.
     function __ResourceMetering_init() internal onlyInitializing {
         if (params.prevBlockNum == 0) {
-            params = ResourceParams({ prevBaseFee: 1 gwei, prevBoughtGas: 0, prevBlockNum: uint64(block.number) });
+            params = ResourceParams({ prevUnstableFee: 1 gwei, prevBoughtGas: 0, prevBlockNum: uint64(block.number) });
         }
     }
 }

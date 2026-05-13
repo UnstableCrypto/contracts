@@ -16,13 +16,13 @@ contract GasPriceOracle_Test is CommonTest {
     uint64 constant number = 10;
     uint64 constant timestamp = 11;
     uint256 constant baseFee = 2 * (10 ** 6);
-    uint256 constant blobBaseFee = 3 * (10 ** 6);
+    uint256 constant blobUnstableFee = 3 * (10 ** 6);
     bytes32 constant hash = bytes32(uint256(64));
     uint64 constant sequenceNumber = 0;
     bytes32 constant batcherHash = bytes32(uint256(777));
     uint256 constant l1FeeOverhead = 310;
     uint256 constant l1FeeScalar = 10;
-    uint32 constant blobBaseFeeScalar = 15;
+    uint32 constant blobUnstableFeeScalar = 15;
     uint32 constant baseFeeScalar = 20;
     uint32 constant operatorFeeScalar = 4_000_000;
     uint64 constant operatorFeeConstant = 300;
@@ -59,9 +59,9 @@ contract GasPriceOracleBedrock_Test is GasPriceOracle_Test {
         });
     }
 
-    /// @dev Tests that `l1BaseFee` is set correctly.
-    function test_l1BaseFee_succeeds() external view {
-        assertEq(gasPriceOracle.l1BaseFee(), baseFee);
+    /// @dev Tests that `l1UnstableFee` is set correctly.
+    function test_l1UnstableFee_succeeds() external view {
+        assertEq(gasPriceOracle.l1UnstableFee(), baseFee);
     }
 
     /// @dev Tests that `gasPrice` is set correctly.
@@ -104,11 +104,11 @@ contract GasPriceOracleBedrock_Test is GasPriceOracle_Test {
         assertEq(returndata, hex"");
     }
 
-    /// @dev Tests that `setL1BaseFee` reverts since it was removed in bedrock.
-    function test_setL1BaseFee_doesNotExist_reverts() external {
+    /// @dev Tests that `setL1UnstableFee` reverts since it was removed in bedrock.
+    function test_setL1UnstableFee_doesNotExist_reverts() external {
         // nosemgrep: sol-style-use-abi-encodecall
         (bool success, bytes memory returndata) =
-            address(gasPriceOracle).call(abi.encodeWithSignature("setL1BaseFee(uint256)", 1));
+            address(gasPriceOracle).call(abi.encodeWithSignature("setL1UnstableFee(uint256)", 1));
 
         assertEq(success, false);
         assertEq(returndata, hex"");
@@ -135,7 +135,7 @@ contract GasPriceOracleBedrock_Test is GasPriceOracle_Test {
 
         uint256 price = gasPriceOracle.getL1Fee(data);
         assertEq(price, 28_600); // ((((16 * data.length(i.e 2)) * (68 * 16)) + l1FeeOverhead(i.e. 310)) *
-        // l1BaseFee(i.e. 2M) *
+        // l1UnstableFee(i.e. 2M) *
         // l1FeeScalar(i.e. 10)) / 1e6
     }
 
@@ -157,7 +157,7 @@ contract GasPriceOracleEcotone_Test is GasPriceOracle_Test {
         assertEq(gasPriceOracle.isEcotone(), true);
 
         bytes memory calldataPacked = Encoding.encodeSetL1BlockValuesEcotone(
-            baseFeeScalar, blobBaseFeeScalar, sequenceNumber, timestamp, number, baseFee, blobBaseFee, hash, batcherHash
+            baseFeeScalar, blobUnstableFeeScalar, sequenceNumber, timestamp, number, baseFee, blobUnstableFee, hash, batcherHash
         );
 
         // Execute the function call
@@ -198,14 +198,14 @@ contract GasPriceOracleEcotone_Test is GasPriceOracle_Test {
         gasPriceOracle.scalar();
     }
 
-    /// @dev Tests that `l1BaseFee` is set correctly.
-    function test_l1BaseFee_succeeds() external view {
-        assertEq(gasPriceOracle.l1BaseFee(), baseFee);
+    /// @dev Tests that `l1UnstableFee` is set correctly.
+    function test_l1UnstableFee_succeeds() external view {
+        assertEq(gasPriceOracle.l1UnstableFee(), baseFee);
     }
 
-    /// @dev Tests that `blobBaseFee` is set correctly.
-    function test_blobBaseFee_succeeds() external view {
-        assertEq(gasPriceOracle.blobBaseFee(), blobBaseFee);
+    /// @dev Tests that `blobUnstableFee` is set correctly.
+    function test_blobUnstableFee_succeeds() external view {
+        assertEq(gasPriceOracle.blobUnstableFee(), blobUnstableFee);
     }
 
     /// @dev Tests that `baseFeeScalar` is set correctly.
@@ -213,9 +213,9 @@ contract GasPriceOracleEcotone_Test is GasPriceOracle_Test {
         assertEq(gasPriceOracle.baseFeeScalar(), baseFeeScalar);
     }
 
-    /// @dev Tests that `blobBaseFeeScalar` is set correctly.
-    function test_blobBaseFeeScalar_succeeds() external view {
-        assertEq(gasPriceOracle.blobBaseFeeScalar(), blobBaseFeeScalar);
+    /// @dev Tests that `blobUnstableFeeScalar` is set correctly.
+    function test_blobUnstableFeeScalar_succeeds() external view {
+        assertEq(gasPriceOracle.blobUnstableFeeScalar(), blobUnstableFeeScalar);
     }
 
     /// @dev Tests that `decimals` is set correctly.
@@ -249,7 +249,7 @@ contract GasPriceOracleFjordActive_Test is GasPriceOracle_Test {
         super.setUp();
 
         bytes memory calldataPacked = Encoding.encodeSetL1BlockValuesEcotone(
-            baseFeeScalar, blobBaseFeeScalar, sequenceNumber, timestamp, number, baseFee, blobBaseFee, hash, batcherHash
+            baseFeeScalar, blobUnstableFeeScalar, sequenceNumber, timestamp, number, baseFee, blobUnstableFee, hash, batcherHash
         );
 
         vm.prank(depositor);
@@ -290,14 +290,14 @@ contract GasPriceOracleFjordActive_Test is GasPriceOracle_Test {
         gasPriceOracle.scalar();
     }
 
-    /// @dev Tests that `l1BaseFee` is set correctly.
-    function test_l1BaseFee_succeeds() external view {
-        assertEq(gasPriceOracle.l1BaseFee(), baseFee);
+    /// @dev Tests that `l1UnstableFee` is set correctly.
+    function test_l1UnstableFee_succeeds() external view {
+        assertEq(gasPriceOracle.l1UnstableFee(), baseFee);
     }
 
-    /// @dev Tests that `blobBaseFee` is set correctly.
-    function test_blobBaseFee_succeeds() external view {
-        assertEq(gasPriceOracle.blobBaseFee(), blobBaseFee);
+    /// @dev Tests that `blobUnstableFee` is set correctly.
+    function test_blobUnstableFee_succeeds() external view {
+        assertEq(gasPriceOracle.blobUnstableFee(), blobUnstableFee);
     }
 
     /// @dev Tests that `baseFeeScalar` is set correctly.
@@ -305,9 +305,9 @@ contract GasPriceOracleFjordActive_Test is GasPriceOracle_Test {
         assertEq(gasPriceOracle.baseFeeScalar(), baseFeeScalar);
     }
 
-    /// @dev Tests that `blobBaseFeeScalar` is set correctly.
-    function test_blobBaseFeeScalar_succeeds() external view {
-        assertEq(gasPriceOracle.blobBaseFeeScalar(), blobBaseFeeScalar);
+    /// @dev Tests that `blobUnstableFeeScalar` is set correctly.
+    function test_blobUnstableFeeScalar_succeeds() external view {
+        assertEq(gasPriceOracle.blobUnstableFeeScalar(), blobUnstableFeeScalar);
     }
 
     /// @dev Tests that `decimals` is set correctly.
@@ -376,12 +376,12 @@ contract GasPriceOracleIsthmus_Test is GasPriceOracle_Test {
 
         bytes memory calldataPacked = Encoding.encodeSetL1BlockValuesIsthmus(
             baseFeeScalar,
-            blobBaseFeeScalar,
+            blobUnstableFeeScalar,
             sequenceNumber,
             timestamp,
             number,
             baseFee,
-            blobBaseFee,
+            blobUnstableFee,
             hash,
             batcherHash,
             operatorFeeScalar,
@@ -425,12 +425,12 @@ contract GasPriceOracleJovian_Test is GasPriceOracle_Test {
         // Configure Isthmus state on the L1 block.
         bytes memory calldataPacked = Encoding.encodeSetL1BlockValuesIsthmus(
             baseFeeScalar,
-            blobBaseFeeScalar,
+            blobUnstableFeeScalar,
             sequenceNumber,
             timestamp,
             number,
             baseFee,
-            blobBaseFee,
+            blobUnstableFee,
             hash,
             batcherHash,
             operatorFeeScalar,
@@ -457,12 +457,12 @@ contract GasPriceOracleJovian_Test is GasPriceOracle_Test {
             .call(
                 Encoding.encodeSetL1BlockValuesIsthmus(
                     baseFeeScalar,
-                    blobBaseFeeScalar,
+                    blobUnstableFeeScalar,
                     sequenceNumber,
                     timestamp,
                     number,
                     baseFee,
-                    blobBaseFee,
+                    blobUnstableFee,
                     hash,
                     batcherHash,
                     _operatorFeeScalar,

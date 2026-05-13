@@ -159,14 +159,14 @@ contract GasPriceOracle is ISemver {
 
     /// @notice Retrieves the latest known L1 base fee.
     /// @return Latest known L1 base fee.
-    function l1BaseFee() public view returns (uint256) {
+    function l1UnstableFee() public view returns (uint256) {
         return IL1Block(Predeploys.L1_BLOCK_ATTRIBUTES).basefee();
     }
 
     /// @notice Retrieves the current blob base fee.
     /// @return Current blob base fee.
-    function blobBaseFee() public view returns (uint256) {
-        return IL1Block(Predeploys.L1_BLOCK_ATTRIBUTES).blobBaseFee();
+    function blobUnstableFee() public view returns (uint256) {
+        return IL1Block(Predeploys.L1_BLOCK_ATTRIBUTES).blobUnstableFee();
     }
 
     /// @notice Retrieves the current base fee scalar.
@@ -177,8 +177,8 @@ contract GasPriceOracle is ISemver {
 
     /// @notice Retrieves the current blob base fee scalar.
     /// @return Current blob base fee scalar.
-    function blobBaseFeeScalar() public view returns (uint32) {
-        return IL1Block(Predeploys.L1_BLOCK_ATTRIBUTES).blobBaseFeeScalar();
+    function blobUnstableFeeScalar() public view returns (uint32) {
+        return IL1Block(Predeploys.L1_BLOCK_ATTRIBUTES).blobUnstableFeeScalar();
     }
 
     /// @custom:legacy
@@ -235,7 +235,7 @@ contract GasPriceOracle is ISemver {
     /// @return L1 fee that should be paid for the tx
     function _getL1FeeBedrock(bytes memory _data) internal view returns (uint256) {
         uint256 l1GasUsed = _getCalldataGas(_data);
-        uint256 fee = (l1GasUsed + IL1Block(Predeploys.L1_BLOCK_ATTRIBUTES).l1FeeOverhead()) * l1BaseFee()
+        uint256 fee = (l1GasUsed + IL1Block(Predeploys.L1_BLOCK_ATTRIBUTES).l1FeeOverhead()) * l1UnstableFee()
             * IL1Block(Predeploys.L1_BLOCK_ATTRIBUTES).l1FeeScalar();
         return fee / (10 ** DECIMALS);
     }
@@ -245,9 +245,9 @@ contract GasPriceOracle is ISemver {
     /// @return L1 fee that should be paid for the tx
     function _getL1FeeEcotone(bytes memory _data) internal view returns (uint256) {
         uint256 l1GasUsed = _getCalldataGas(_data);
-        uint256 scaledBaseFee = baseFeeScalar() * 16 * l1BaseFee();
-        uint256 scaledBlobBaseFee = blobBaseFeeScalar() * blobBaseFee();
-        uint256 fee = l1GasUsed * (scaledBaseFee + scaledBlobBaseFee);
+        uint256 scaledUnstableFee = baseFeeScalar() * 16 * l1UnstableFee();
+        uint256 scaledBlobUnstableFee = blobUnstableFeeScalar() * blobUnstableFee();
+        uint256 fee = l1GasUsed * (scaledUnstableFee + scaledBlobUnstableFee);
         return fee / (16 * 10 ** DECIMALS);
     }
 
@@ -280,7 +280,7 @@ contract GasPriceOracle is ISemver {
     function _fjordL1Cost(uint256 _fastLzSize) internal view returns (uint256) {
         // Apply the linear regression to estimate the Brotli 10 size
         uint256 estimatedSize = _fjordLinearRegression(_fastLzSize);
-        uint256 feeScaled = baseFeeScalar() * 16 * l1BaseFee() + blobBaseFeeScalar() * blobBaseFee();
+        uint256 feeScaled = baseFeeScalar() * 16 * l1UnstableFee() + blobUnstableFeeScalar() * blobUnstableFee();
         return estimatedSize * feeScaled / (10 ** (DECIMALS * 2));
     }
 

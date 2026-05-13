@@ -3,12 +3,12 @@ pragma solidity ^0.8.0;
 
 import { ISemver } from "interfaces/universal/ISemver.sol";
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 import { IOptimismPortal2 } from "interfaces/L1/IOptimismPortal2.sol";
 import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
-import { IReinitializableBase } from "interfaces/universal/IReinitializableBase.sol";
+import { IReinitializableUnstable } from "interfaces/universal/IReinitializableUnstable.sol";
 
-interface IETHLockbox is IProxyAdminOwnedBase, ISemver, IReinitializableBase {
+interface IETHLockbox is IProxyAdminOwnedUnstable, ISemver, IReinitializableUnstable {
     error ETHLockbox_Unauthorized();
     error ETHLockbox_Paused();
     error ETHLockbox_InsufficientBalance();

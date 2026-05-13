@@ -2,10 +2,10 @@
 pragma solidity 0.8.15;
 
 // Contracts
-import { ProxyAdminOwnedBase } from "src/universal/ProxyAdminOwnedBase.sol";
+import { ProxyAdminOwnedUnstable } from "src/universal/ProxyAdminOwnedUnstable.sol";
 import { Initializable } from "lib/openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
 import { ResourceMetering } from "src/L1/ResourceMetering.sol";
-import { ReinitializableBase } from "src/universal/ReinitializableBase.sol";
+import { ReinitializableUnstable } from "src/universal/ReinitializableUnstable.sol";
 
 // Libraries
 import { EOA } from "src/libraries/EOA.sol";
@@ -33,7 +33,7 @@ import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
 /// @notice The OptimismPortal is a low-level contract responsible for passing messages between L1
 ///         and L2. Messages sent directly to the OptimismPortal have no form of replayability.
 ///         Users are encouraged to use the L1CrossDomainMessenger for a higher-level interface.
-contract OptimismPortal2 is Initializable, ResourceMetering, ReinitializableBase, ProxyAdminOwnedBase, ISemver {
+contract OptimismPortal2 is Initializable, ResourceMetering, ReinitializableUnstable, ProxyAdminOwnedUnstable, ISemver {
     /// @notice Represents a proven withdrawal.
     /// @custom:field disputeGameProxy Game that the withdrawal was proven against.
     /// @custom:field timestamp        Timestamp at which the withdrawal was proven.
@@ -214,7 +214,7 @@ contract OptimismPortal2 is Initializable, ResourceMetering, ReinitializableBase
     }
 
     /// @param _proofMaturityDelaySeconds The proof maturity delay in seconds.
-    constructor(uint256 _proofMaturityDelaySeconds) ReinitializableBase(3) {
+    constructor(uint256 _proofMaturityDelaySeconds) ReinitializableUnstable(3) {
         PROOF_MATURITY_DELAY_SECONDS = _proofMaturityDelaySeconds;
         _disableInitializers();
     }

@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import { IResourceMetering } from "interfaces/L1/IResourceMetering.sol";
 import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
-interface ISystemConfig is IProxyAdminOwnedBase {
+interface ISystemConfig is IProxyAdminOwnedUnstable {
     enum UpdateType {
         BATCHER,
         FEE_SCALARS,
@@ -26,7 +26,7 @@ interface ISystemConfig is IProxyAdminOwnedBase {
         address delayedWETH;
     }
 
-    error ReinitializableBase_ZeroInitVersion();
+    error ReinitializableUnstable_ZeroInitVersion();
     error SystemConfig_InvalidFeatureState();
 
     event ConfigUpdate(uint256 indexed version, UpdateType indexed updateType, bytes data);
@@ -76,7 +76,7 @@ interface ISystemConfig is IProxyAdminOwnedBase {
     function minimumGasLimit() external view returns (uint64);
     function operatorFeeConstant() external view returns (uint64);
     function operatorFeeScalar() external view returns (uint32);
-    function minBaseFee() external view returns (uint64);
+    function minUnstableFee() external view returns (uint64);
     function daFootprintGasScalar() external view returns (uint16);
     function optimismMintableERC20Factory() external view returns (address addr_);
     function optimismPortal() external view returns (address addr_);
@@ -94,7 +94,7 @@ interface ISystemConfig is IProxyAdminOwnedBase {
     function setOperatorFeeScalars(uint32 _operatorFeeScalar, uint64 _operatorFeeConstant) external;
     function setUnsafeBlockSigner(address _unsafeBlockSigner) external;
     function setEIP1559Params(uint32 _denominator, uint32 _elasticity) external;
-    function setMinBaseFee(uint64 _minBaseFee) external;
+    function setMinUnstableFee(uint64 _minUnstableFee) external;
     function setDAFootprintGasScalar(uint16 _daFootprintGasScalar) external;
     function startBlock() external view returns (uint256 startBlock_);
     function transferOwnership(address newOwner) external; // nosemgrep

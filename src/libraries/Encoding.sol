@@ -145,22 +145,22 @@ library Encoding {
 
     /// @notice Returns an appropriately encoded call to L1Block.setL1BlockValuesEcotone
     /// @param _baseFeeScalar       L1 base fee Scalar
-    /// @param _blobBaseFeeScalar   L1 blob base fee Scalar
+    /// @param _blobUnstableFeeScalar   L1 blob base fee Scalar
     /// @param _sequenceNumber      Number of L2 blocks since epoch start.
     /// @param _timestamp           L1 timestamp.
     /// @param _number              L1 blocknumber.
     /// @param _baseFee             L1 base fee.
-    /// @param _blobBaseFee         L1 blob base fee.
+    /// @param _blobUnstableFee         L1 blob base fee.
     /// @param _hash                L1 blockhash.
     /// @param _batcherHash         Versioned hash to authenticate batcher by.
     function encodeSetL1BlockValuesEcotone(
         uint32 _baseFeeScalar,
-        uint32 _blobBaseFeeScalar,
+        uint32 _blobUnstableFeeScalar,
         uint64 _sequenceNumber,
         uint64 _timestamp,
         uint64 _number,
         uint256 _baseFee,
-        uint256 _blobBaseFee,
+        uint256 _blobUnstableFee,
         bytes32 _hash,
         bytes32 _batcherHash
     )
@@ -172,12 +172,12 @@ library Encoding {
         return abi.encodePacked(
             functionSignature,
             _baseFeeScalar,
-            _blobBaseFeeScalar,
+            _blobUnstableFeeScalar,
             _sequenceNumber,
             _timestamp,
             _number,
             _baseFee,
-            _blobBaseFee,
+            _blobUnstableFee,
             _hash,
             _batcherHash
         );
@@ -185,24 +185,24 @@ library Encoding {
 
     /// @notice Returns an appropriately encoded call to L1Block.setL1BlockValuesIsthmus
     /// @param _baseFeeScalar       L1 base fee Scalar
-    /// @param _blobBaseFeeScalar   L1 blob base fee Scalar
+    /// @param _blobUnstableFeeScalar   L1 blob base fee Scalar
     /// @param _sequenceNumber      Number of L2 blocks since epoch start.
     /// @param _timestamp           L1 timestamp.
     /// @param _number              L1 blocknumber.
     /// @param _baseFee             L1 base fee.
-    /// @param _blobBaseFee         L1 blob base fee.
+    /// @param _blobUnstableFee         L1 blob base fee.
     /// @param _hash                L1 blockhash.
     /// @param _batcherHash         Versioned hash to authenticate batcher by.
     /// @param _operatorFeeScalar   Operator fee scalar.
     /// @param _operatorFeeConstant Operator fee constant.
     function encodeSetL1BlockValuesIsthmus(
         uint32 _baseFeeScalar,
-        uint32 _blobBaseFeeScalar,
+        uint32 _blobUnstableFeeScalar,
         uint64 _sequenceNumber,
         uint64 _timestamp,
         uint64 _number,
         uint256 _baseFee,
-        uint256 _blobBaseFee,
+        uint256 _blobUnstableFee,
         bytes32 _hash,
         bytes32 _batcherHash,
         uint32 _operatorFeeScalar,
@@ -216,12 +216,12 @@ library Encoding {
         return abi.encodePacked(
             functionSignature,
             _baseFeeScalar,
-            _blobBaseFeeScalar,
+            _blobUnstableFeeScalar,
             _sequenceNumber,
             _timestamp,
             _number,
             _baseFee,
-            _blobBaseFee,
+            _blobUnstableFee,
             _hash,
             _batcherHash,
             _operatorFeeScalar,
@@ -231,12 +231,12 @@ library Encoding {
 
     /// @notice Returns an appropriately encoded call to L1Block.setL1BlockValuesJovian
     /// @param _baseFeeScalar        L1 base fee Scalar
-    /// @param _blobBaseFeeScalar    L1 blob base fee Scalar
+    /// @param _blobUnstableFeeScalar    L1 blob base fee Scalar
     /// @param _sequenceNumber       Number of L2 blocks since epoch start.
     /// @param _timestamp            L1 timestamp.
     /// @param _number               L1 blocknumber.
     /// @param _baseFee              L1 base fee.
-    /// @param _blobBaseFee          L1 blob base fee.
+    /// @param _blobUnstableFee          L1 blob base fee.
     /// @param _hash                 L1 blockhash.
     /// @param _batcherHash          Versioned hash to authenticate batcher by.
     /// @param _operatorFeeScalar    Operator fee scalar.
@@ -244,12 +244,12 @@ library Encoding {
     /// @param _daFootprintGasScalar DA Footprint scalar.
     function encodeSetL1BlockValuesJovian(
         uint32 _baseFeeScalar,
-        uint32 _blobBaseFeeScalar,
+        uint32 _blobUnstableFeeScalar,
         uint64 _sequenceNumber,
         uint64 _timestamp,
         uint64 _number,
         uint256 _baseFee,
-        uint256 _blobBaseFee,
+        uint256 _blobUnstableFee,
         bytes32 _hash,
         bytes32 _batcherHash,
         uint32 _operatorFeeScalar,
@@ -265,10 +265,10 @@ library Encoding {
         // Split up the encoding into multiple parts to avoid stack too deep.
         return abi.encodePacked(
             abi.encodePacked(
-                functionSignature, _baseFeeScalar, _blobBaseFeeScalar, _sequenceNumber, _timestamp, _number, _baseFee
+                functionSignature, _baseFeeScalar, _blobUnstableFeeScalar, _sequenceNumber, _timestamp, _number, _baseFee
             ),
             abi.encodePacked(
-                _blobBaseFee, _hash, _batcherHash, _operatorFeeScalar, _operatorFeeConstant, _daFootprintGasScalar
+                _blobUnstableFee, _hash, _batcherHash, _operatorFeeScalar, _operatorFeeConstant, _daFootprintGasScalar
             )
         );
     }

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.15;
 
 // Testing
-import { CommonBase } from "lib/forge-std/src/Base.sol";
+import { CommonUnstable } from "lib/forge-std/src/Unstable.sol";
 
 // Libraries
 import "src/libraries/bridge/Types.sol";
@@ -15,7 +15,7 @@ import { IFaultDisputeGameV2 } from "interfaces/L1/proofs/v2/IFaultDisputeGameV2
 ///         moves for a given `FaultDisputeGame` contract, from the eyes of an honest
 ///         actor. The `GameSolver` does not implement functionality for acting on the `Move`s
 ///         it suggests.
-abstract contract GameSolver is CommonBase {
+abstract contract GameSolver is CommonUnstable {
     /// @notice The `FaultDisputeGame` proxy that the `GameSolver` will be solving.
     IFaultDisputeGameV2 public immutable GAME;
     /// @notice The split depth of the game

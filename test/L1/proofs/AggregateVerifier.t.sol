@@ -11,9 +11,9 @@ import { Claim, GameStatus, Hash, Timestamp } from "src/libraries/bridge/Types.s
 import { AggregateVerifier } from "src/L1/proofs/AggregateVerifier.sol";
 import { IVerifier } from "interfaces/L1/proofs/IVerifier.sol";
 
-import { BaseTest } from "./BaseTest.t.sol";
+import { UnstableTest } from "./UnstableTest.t.sol";
 
-contract AggregateVerifierTest is BaseTest {
+contract AggregateVerifierTest is UnstableTest {
     function testInitializeWithTEEProof() public {
         currentL2BlockNumber += BLOCK_INTERVAL;
         Claim rootClaim = Claim.wrap(keccak256(abi.encode(currentL2BlockNumber)));

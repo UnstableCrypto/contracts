@@ -152,7 +152,7 @@ contract CrossDomainMessenger_RelayMessage_Test is CrossDomainMessenger_TestInit
 /// @dev CrossDomainMessenger_Test is for testing functionality which is common to both the L1 and
 ///      L2 CrossDomainMessenger contracts. For simplicity, we use the L1 Messenger as the test
 ///      contract.
-contract CrossDomainMessenger_BaseGas_Test is CommonTest {
+contract CrossDomainMessenger_UnstableGas_Test is CommonTest {
     /// @notice Ensure that `baseGas` passes for the max value of `_minGasLimit`, this is about
     ///         4 Billion.
     function test_baseGas_succeeds() external view {

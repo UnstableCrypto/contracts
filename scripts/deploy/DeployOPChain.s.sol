@@ -63,7 +63,7 @@ contract DeployOPChain is SystemDeploy {
         Types.DeployInput memory deployInput = Types.DeployInput({
             roles: roles,
             basefeeScalar: _input.basefeeScalar,
-            blobBasefeeScalar: _input.blobBaseFeeScalar,
+            blobUnstablefeeScalar: _input.blobUnstableFeeScalar,
             l2ChainId: _input.l2ChainId,
             startingAnchorRoot: startingAnchorRoot(),
             saltMixer: _input.saltMixer,
@@ -129,7 +129,7 @@ contract DeployOPChain is SystemDeploy {
         require(_i.proposer != address(0), "DeployOPChainInput: proposer not set");
         require(_i.challenger != address(0), "DeployOPChainInput: challenger not set");
 
-        require(_i.blobBaseFeeScalar != 0, "DeployOPChainInput: blobBaseFeeScalar not set");
+        require(_i.blobUnstableFeeScalar != 0, "DeployOPChainInput: blobUnstableFeeScalar not set");
         require(_i.basefeeScalar != 0, "DeployOPChainInput: basefeeScalar not set");
         require(_i.gasLimit != 0, "DeployOPChainInput: gasLimit not set");
 

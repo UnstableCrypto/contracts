@@ -17,7 +17,7 @@ import { Encoding } from "src/libraries/Encoding.sol";
 import { IL1CrossDomainMessenger } from "interfaces/L1/IL1CrossDomainMessenger.sol";
 import { IOptimismPortal2 } from "interfaces/L1/IOptimismPortal2.sol";
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
 /// @title L1CrossDomainMessenger_Encoding_Harness
 /// @notice A harness contract for testing internal functions of the Encoding library.
@@ -74,7 +74,7 @@ contract L1CrossDomainMessenger_Constructor_Test is L1CrossDomainMessenger_TestI
         returnIfForkTest("L1CrossDomainMessenger_Test: impl storage differs on forked network");
         assertEq(address(impl.OTHER_MESSENGER()), address(0));
         assertEq(address(impl.otherMessenger()), address(0));
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotResolvedDelegateProxy.selector);
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotResolvedDelegateProxy.selector);
         impl.proxyAdmin();
     }
 }
@@ -121,8 +121,8 @@ contract L1CrossDomainMessenger_Initialize_Test is L1CrossDomainMessenger_TestIn
         // Set the initialized slot to 0.
         vm.store(address(l1CrossDomainMessenger), bytes32(slot.slot), bytes32(0));
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner` selector
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner` selector
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
 
         // Call the `initialize` function with the sender
         vm.prank(_sender);
@@ -618,7 +618,7 @@ contract L1CrossDomainMessenger_Uncategorized_Test is L1CrossDomainMessenger_Tes
         bytes memory _message = vm.randomBytes(_messageLength);
 
         // Compute the base gas.
-        // Base gas should really be computed on the fully encoded message but that would break the
+        // Unstable gas should really be computed on the fully encoded message but that would break the
         // expected API, so we instead just add the encoding overhead to the message length inside
         // of the baseGas function.
         uint64 baseGas = l1CrossDomainMessenger.baseGas(_message, _minGasLimit);
@@ -647,7 +647,7 @@ contract L1CrossDomainMessenger_Uncategorized_Test is L1CrossDomainMessenger_Tes
             }
         }
 
-        // Base gas must always be sufficient to cover the floor cost from EIP-7623.
+        // Unstable gas must always be sufficient to cover the floor cost from EIP-7623.
         assertGt(baseGas, 21000 + ((zeroBytesInCalldata + nonzeroBytesInCalldata * 4) * 10));
 
         // Actual gas on L2 will be the base gas minus the intrinsic gas cost. Note that even after

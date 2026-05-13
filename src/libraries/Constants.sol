@@ -49,9 +49,9 @@ library Constants {
             maxResourceLimit: 20_000_000,
             elasticityMultiplier: 10,
             baseFeeMaxChangeDenominator: 8,
-            minimumBaseFee: 1 gwei,
+            minimumUnstableFee: 1 gwei,
             systemTxMaxGas: 1_000_000,
-            maximumBaseFee: type(uint128).max
+            maximumUnstableFee: type(uint128).max
         });
         return config;
     }

@@ -16,7 +16,7 @@ import { Features } from "src/libraries/Features.sol";
 import { IResourceMetering } from "interfaces/L1/IResourceMetering.sol";
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
 import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
 /// @title SystemConfig Test Init
 /// @notice Reusable test initialization for SystemConfig tests.
@@ -77,9 +77,9 @@ contract SystemConfig_Constructor_Test is SystemConfig_TestInit {
         assertEq(actual.maxResourceLimit, 0);
         assertEq(actual.elasticityMultiplier, 0);
         assertEq(actual.baseFeeMaxChangeDenominator, 0);
-        assertEq(actual.minimumBaseFee, 0);
+        assertEq(actual.minimumUnstableFee, 0);
         assertEq(actual.systemTxMaxGas, 0);
-        assertEq(actual.maximumBaseFee, 0);
+        assertEq(actual.maximumUnstableFee, 0);
         assertEq(impl.startBlock(), type(uint256).max);
         assertEq(address(impl.batchInbox()), address(0));
         // Check addresses
@@ -116,9 +116,9 @@ contract SystemConfig_Initialize_Test is SystemConfig_TestInit {
         assertEq(actual.maxResourceLimit, rcfg.maxResourceLimit);
         assertEq(actual.elasticityMultiplier, rcfg.elasticityMultiplier);
         assertEq(actual.baseFeeMaxChangeDenominator, rcfg.baseFeeMaxChangeDenominator);
-        assertEq(actual.minimumBaseFee, rcfg.minimumBaseFee);
+        assertEq(actual.minimumUnstableFee, rcfg.minimumUnstableFee);
         assertEq(actual.systemTxMaxGas, rcfg.systemTxMaxGas);
-        assertEq(actual.maximumBaseFee, rcfg.maximumBaseFee);
+        assertEq(actual.maximumUnstableFee, rcfg.maximumUnstableFee);
         // Depends on start block being set to 0 in `initialize`
         uint256 cfgStartBlock = deploy.cfg().systemConfigStartBlock();
         assertEq(systemConfig.startBlock(), (cfgStartBlock == 0 ? block.number : cfgStartBlock));
@@ -202,8 +202,8 @@ contract SystemConfig_Initialize_Test is SystemConfig_TestInit {
         // Get the minimum gas limit.
         uint64 minimumGasLimit = systemConfig.minimumGasLimit();
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner` selector.
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner` selector.
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
 
         // Call the `initialize` function with the sender
         vm.prank(_sender);
@@ -513,8 +513,8 @@ contract SystemConfig_SetResourceConfig_Test is SystemConfig_TestInit {
             elasticityMultiplier: 10,
             baseFeeMaxChangeDenominator: 8,
             systemTxMaxGas: 1_000_000,
-            minimumBaseFee: 2 gwei,
-            maximumBaseFee: 1 gwei
+            minimumUnstableFee: 2 gwei,
+            maximumUnstableFee: 1 gwei
         });
         _initializeWithResourceConfig(config, "SystemConfig: min base fee must be less than max base");
     }
@@ -527,8 +527,8 @@ contract SystemConfig_SetResourceConfig_Test is SystemConfig_TestInit {
             elasticityMultiplier: 10,
             baseFeeMaxChangeDenominator: 0,
             systemTxMaxGas: 1_000_000,
-            minimumBaseFee: 1 gwei,
-            maximumBaseFee: 2 gwei
+            minimumUnstableFee: 1 gwei,
+            maximumUnstableFee: 2 gwei
         });
         _initializeWithResourceConfig(config, "SystemConfig: denominator must be larger than 1");
     }
@@ -542,8 +542,8 @@ contract SystemConfig_SetResourceConfig_Test is SystemConfig_TestInit {
             elasticityMultiplier: 10,
             baseFeeMaxChangeDenominator: 8,
             systemTxMaxGas: uint32(gasLimit),
-            minimumBaseFee: 1 gwei,
-            maximumBaseFee: 2 gwei
+            minimumUnstableFee: 1 gwei,
+            maximumUnstableFee: 2 gwei
         });
         _initializeWithResourceConfig(config, "SystemConfig: gas limit too low");
     }
@@ -555,8 +555,8 @@ contract SystemConfig_SetResourceConfig_Test is SystemConfig_TestInit {
             elasticityMultiplier: 0,
             baseFeeMaxChangeDenominator: 8,
             systemTxMaxGas: 1_000_000,
-            minimumBaseFee: 1 gwei,
-            maximumBaseFee: 2 gwei
+            minimumUnstableFee: 1 gwei,
+            maximumUnstableFee: 2 gwei
         });
         _initializeWithResourceConfig(config, "SystemConfig: elasticity multiplier cannot be 0");
     }
@@ -569,8 +569,8 @@ contract SystemConfig_SetResourceConfig_Test is SystemConfig_TestInit {
             elasticityMultiplier: 11,
             baseFeeMaxChangeDenominator: 8,
             systemTxMaxGas: 1_000_000,
-            minimumBaseFee: 1 gwei,
-            maximumBaseFee: 2 gwei
+            minimumUnstableFee: 1 gwei,
+            maximumUnstableFee: 2 gwei
         });
         _initializeWithResourceConfig(config, "SystemConfig: precision loss with target resource limit");
     }
@@ -710,7 +710,7 @@ contract SystemConfig_SetFeature_Test is SystemConfig_TestInit {
         // Ensure sender is not ProxyAdmin or ProxyAdmin owner
         vm.assume(_sender != address(systemConfig.proxyAdmin()) && _sender != systemConfig.proxyAdminOwner());
 
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
         vm.prank(_sender);
         systemConfig.setFeature(EXAMPLE_FEATURE, true);
     }
@@ -911,23 +911,23 @@ contract SystemConfig_SuperchainConfig_Test is SystemConfig_TestInit {
     }
 }
 
-/// @title SystemConfig_SetMinBaseFee_Test
-/// @notice Test contract for SystemConfig `setMinBaseFee` function.
-contract SystemConfig_SetMinBaseFee_Test is SystemConfig_TestInit {
-    /// @notice Tests that `setMinBaseFee` reverts if the caller is not the owner.
-    function test_setMinBaseFee_notOwner_reverts() external {
+/// @title SystemConfig_SetMinUnstableFee_Test
+/// @notice Test contract for SystemConfig `setMinUnstableFee` function.
+contract SystemConfig_SetMinUnstableFee_Test is SystemConfig_TestInit {
+    /// @notice Tests that `setMinUnstableFee` reverts if the caller is not the owner.
+    function test_setMinUnstableFee_notOwner_reverts() external {
         vm.expectRevert("Ownable: caller is not the owner");
-        systemConfig.setMinBaseFee(0);
+        systemConfig.setMinUnstableFee(0);
     }
 
-    /// @notice Tests that `setMinBaseFee` updates the min base fee successfully.
-    function testFuzz_setMinBaseFee_succeeds(uint64 newMinBaseFee) external {
+    /// @notice Tests that `setMinUnstableFee` updates the min base fee successfully.
+    function testFuzz_setMinUnstableFee_succeeds(uint64 newMinUnstableFee) external {
         vm.expectEmit(address(systemConfig));
-        emit ConfigUpdate(0, ISystemConfig.UpdateType.MIN_BASE_FEE, abi.encode(newMinBaseFee));
+        emit ConfigUpdate(0, ISystemConfig.UpdateType.MIN_BASE_FEE, abi.encode(newMinUnstableFee));
 
         vm.prank(systemConfig.owner());
-        systemConfig.setMinBaseFee(newMinBaseFee);
-        assertEq(systemConfig.minBaseFee(), newMinBaseFee);
+        systemConfig.setMinUnstableFee(newMinUnstableFee);
+        assertEq(systemConfig.minUnstableFee(), newMinUnstableFee);
     }
 }
 

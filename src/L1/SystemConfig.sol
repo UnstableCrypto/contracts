@@ -3,8 +3,8 @@ pragma solidity 0.8.15;
 
 // Contracts
 import { OwnableUpgradeable } from "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
-import { ReinitializableBase } from "src/universal/ReinitializableBase.sol";
-import { ProxyAdminOwnedBase } from "src/universal/ProxyAdminOwnedBase.sol";
+import { ReinitializableUnstable } from "src/universal/ReinitializableUnstable.sol";
+import { ProxyAdminOwnedUnstable } from "src/universal/ProxyAdminOwnedUnstable.sol";
 
 // Libraries
 import { Storage } from "src/libraries/Storage.sol";
@@ -21,7 +21,7 @@ import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
 /// @notice The SystemConfig contract is used to manage configuration of an Optimism network.
 ///         All configuration is stored on L1 and picked up by L2 as part of the derviation of
 ///         the L2 chain.
-contract SystemConfig is ProxyAdminOwnedBase, OwnableUpgradeable, ReinitializableBase, ISemver {
+contract SystemConfig is ProxyAdminOwnedUnstable, OwnableUpgradeable, ReinitializableUnstable, ISemver {
     /// @notice Enum representing different types of updates.
     /// @custom:value BATCHER              Represents an update to the batcher hash.
     /// @custom:value FEE_SCALARS          Represents an update to l1 data fee scalars.
@@ -116,7 +116,7 @@ contract SystemConfig is ProxyAdminOwnedBase, OwnableUpgradeable, Reinitializabl
     /// @notice L2 block gas limit.
     uint64 public gasLimit;
 
-    /// @notice Basefee scalar value. Part of the L2 fee calculation since the Ecotone network upgrade.
+    /// @notice Unstablefee scalar value. Part of the L2 fee calculation since the Ecotone network upgrade.
     uint32 public basefeeScalar;
 
     /// @notice Blobbasefee scalar value. Part of the L2 fee calculation since the Ecotone network upgrade.
@@ -149,7 +149,7 @@ contract SystemConfig is ProxyAdminOwnedBase, OwnableUpgradeable, Reinitializabl
     ISuperchainConfig public superchainConfig;
 
     /// @notice The minimum base fee, in wei.
-    uint64 public minBaseFee;
+    uint64 public minUnstableFee;
 
     /// @notice Bytes32 feature flag name to boolean enabled value.
     mapping(bytes32 => bool) public isFeatureEnabled;
@@ -178,7 +178,7 @@ contract SystemConfig is ProxyAdminOwnedBase, OwnableUpgradeable, Reinitializabl
     /// @notice Constructs the SystemConfig contract.
     /// @dev    START_BLOCK_SLOT is set to type(uint256).max here so that it will be a dead value
     ///         in the singleton.
-    constructor() ReinitializableBase(4) {
+    constructor() ReinitializableUnstable(4) {
         Storage.setUint(START_BLOCK_SLOT, type(uint256).max);
         _disableInitializers();
     }
@@ -440,16 +440,16 @@ contract SystemConfig is ProxyAdminOwnedBase, OwnableUpgradeable, Reinitializabl
 
     /// @notice Updates the minimum base fee. Can only be called by the owner.
     ///         Setting this value to 0 is equivalent to disabling the min base fee feature
-    /// @param _minBaseFee New minimum base fee.
-    function setMinBaseFee(uint64 _minBaseFee) external onlyOwner {
-        _setMinBaseFee(_minBaseFee);
+    /// @param _minUnstableFee New minimum base fee.
+    function setMinUnstableFee(uint64 _minUnstableFee) external onlyOwner {
+        _setMinUnstableFee(_minUnstableFee);
     }
 
     /// @notice Internal function for updating the minimum base fee.
-    function _setMinBaseFee(uint64 _minBaseFee) internal {
-        minBaseFee = _minBaseFee;
+    function _setMinUnstableFee(uint64 _minUnstableFee) internal {
+        minUnstableFee = _minUnstableFee;
 
-        bytes memory data = abi.encode(_minBaseFee);
+        bytes memory data = abi.encode(_minUnstableFee);
         emit ConfigUpdate(VERSION, UpdateType.MIN_BASE_FEE, data);
     }
 
@@ -513,9 +513,9 @@ contract SystemConfig is ProxyAdminOwnedBase, OwnableUpgradeable, Reinitializabl
     function _setResourceConfig(IResourceMetering.ResourceConfig memory _config) internal {
         // Min base fee must be less than or equal to max base fee.
         require(
-            _config.minimumBaseFee <= _config.maximumBaseFee, "SystemConfig: min base fee must be less than max base"
+            _config.minimumUnstableFee <= _config.maximumUnstableFee, "SystemConfig: min base fee must be less than max base"
         );
-        // Base fee change denominator must be greater than 1.
+        // Unstable fee change denominator must be greater than 1.
         require(_config.baseFeeMaxChangeDenominator > 1, "SystemConfig: denominator must be larger than 1");
         // Max resource limit plus system tx gas must be less than or equal to the L2 gas limit.
         // The gas limit must be increased before these values can be increased.

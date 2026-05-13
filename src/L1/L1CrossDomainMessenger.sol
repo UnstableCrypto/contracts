@@ -2,8 +2,8 @@
 pragma solidity 0.8.15;
 
 // Contracts
-import { ProxyAdminOwnedBase } from "src/universal/ProxyAdminOwnedBase.sol";
-import { ReinitializableBase } from "src/universal/ReinitializableBase.sol";
+import { ProxyAdminOwnedUnstable } from "src/universal/ProxyAdminOwnedUnstable.sol";
+import { ReinitializableUnstable } from "src/universal/ReinitializableUnstable.sol";
 import { CrossDomainMessenger } from "src/universal/CrossDomainMessenger.sol";
 
 // Libraries
@@ -20,7 +20,7 @@ import { IOptimismPortal2 as IOptimismPortal } from "interfaces/L1/IOptimismPort
 /// @notice The L1CrossDomainMessenger is a message passing interface between L1 and L2 responsible
 ///         for sending and receiving data on the L1 side. Users are encouraged to use this
 ///         interface instead of interacting with lower-level contracts directly.
-contract L1CrossDomainMessenger is CrossDomainMessenger, ProxyAdminOwnedBase, ReinitializableBase, ISemver {
+contract L1CrossDomainMessenger is CrossDomainMessenger, ProxyAdminOwnedUnstable, ReinitializableUnstable, ISemver {
     /// @custom:legacy
     /// @custom:spacer superchainConfig
     /// @notice Spacer taking up the legacy `superchainConfig` slot.
@@ -43,7 +43,7 @@ contract L1CrossDomainMessenger is CrossDomainMessenger, ProxyAdminOwnedBase, Re
     ISystemConfig public systemConfig;
 
     /// @notice Constructs the L1CrossDomainMessenger contract.
-    constructor() ReinitializableBase(3) {
+    constructor() ReinitializableUnstable(3) {
         _disableInitializers();
     }
 

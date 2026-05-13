@@ -3,10 +3,10 @@ pragma solidity ^0.8.0;
 
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
 import { ISuperchainConfig } from "interfaces/L1/ISuperchainConfig.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
-interface IDelayedWETH is IProxyAdminOwnedBase {
-    error ReinitializableBase_ZeroInitVersion();
+interface IDelayedWETH is IProxyAdminOwnedUnstable {
+    error ReinitializableUnstable_ZeroInitVersion();
 
     struct WithdrawalRequest {
         uint256 amount;

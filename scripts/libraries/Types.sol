@@ -39,7 +39,7 @@ library Types {
     struct DeployInput {
         Roles roles;
         uint32 basefeeScalar;
-        uint32 blobBasefeeScalar;
+        uint32 blobUnstablefeeScalar;
         uint256 l2ChainId;
         // The correct type is Proposal memory but OP Deployer does not yet support structs.
         bytes startingAnchorRoot;
@@ -166,7 +166,7 @@ library Types {
         address challenger;
         // TODO Add fault proofs inputs in a future PR.
         uint32 basefeeScalar;
-        uint32 blobBaseFeeScalar;
+        uint32 blobUnstableFeeScalar;
         uint256 l2ChainId;
         ISuperchainConfig superchainConfigProxy;
         Implementations implementations;

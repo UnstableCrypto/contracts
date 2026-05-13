@@ -21,7 +21,7 @@ import { ICrossDomainMessenger } from "interfaces/universal/ICrossDomainMessenge
 import { IOptimismPortal2 } from "interfaces/L1/IOptimismPortal2.sol";
 import { IL1StandardBridge } from "interfaces/L1/IL1StandardBridge.sol";
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
 /// @title L1StandardBridge_TestInit
 /// @notice Reusable test initialization for `L1StandardBridge` tests.
@@ -197,7 +197,7 @@ contract L1StandardBridge_Initialize_Test is CommonTest {
         StorageSlot memory slot = ForgeArtifacts.getSlot("L1StandardBridge", "_initialized");
         vm.store(address(l1StandardBridge), bytes32(slot.slot), bytes32(0));
 
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
         vm.prank(_sender);
         l1StandardBridge.initialize(l1CrossDomainMessenger, systemConfig);
     }

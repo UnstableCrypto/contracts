@@ -2,7 +2,7 @@
 pragma solidity ^0.8.15;
 
 // Testing
-import { BaseFaultDisputeGame_TestInit, _changeClaimStatus } from "test/L1/proofs/FaultDisputeGame.t.sol";
+import { UnstableFaultDisputeGame_TestInit, _changeClaimStatus } from "test/L1/proofs/FaultDisputeGame.t.sol";
 
 // Libraries
 import { GameType, GameStatus, Hash, Claim, VMStatuses, Proposal } from "src/libraries/bridge/Types.sol";
@@ -12,11 +12,11 @@ import { ForgeArtifacts, StorageSlot } from "scripts/libraries/ForgeArtifacts.so
 import { IDisputeGame } from "interfaces/L1/proofs/IDisputeGame.sol";
 import { IFaultDisputeGameV2 } from "interfaces/L1/proofs/v2/IFaultDisputeGameV2.sol";
 import { IAnchorStateRegistry } from "interfaces/L1/proofs/IAnchorStateRegistry.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 
 /// @title AnchorStateRegistry_TestInit
 /// @notice Reusable test initialization for `AnchorStateRegistry` tests.
-abstract contract AnchorStateRegistry_TestInit is BaseFaultDisputeGame_TestInit {
+abstract contract AnchorStateRegistry_TestInit is UnstableFaultDisputeGame_TestInit {
     /// @dev A valid l2BlockNumber that comes after the current anchor root block.
     uint256 validL2BlockNumber;
 
@@ -170,8 +170,8 @@ contract AnchorStateRegistry_Initialize_Test is AnchorStateRegistry_TestInit {
         // Set the initialized slot to 0.
         vm.store(address(anchorStateRegistry), bytes32(slot.slot), bytes32(0));
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner` selector.
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner` selector.
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
 
         // Call the `initialize` function with the sender
         vm.prank(_sender);

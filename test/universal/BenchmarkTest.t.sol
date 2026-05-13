@@ -13,16 +13,16 @@ import { Encoding } from "src/libraries/Encoding.sol";
 
 // Interfaces
 
-// Free function for setting the prevBaseFee param in the OptimismPortal.
-function setPrevBaseFee(Vm _vm, address _op, uint128 _prevBaseFee) {
-    _vm.store(address(_op), bytes32(uint256(1)), bytes32((block.number << 192) | _prevBaseFee));
+// Free function for setting the prevUnstableFee param in the OptimismPortal.
+function setPrevUnstableFee(Vm _vm, address _op, uint128 _prevUnstableFee) {
+    _vm.store(address(_op), bytes32(uint256(1)), bytes32((block.number << 192) | _prevUnstableFee));
 }
 
-contract SetPrevBaseFee_Test is CommonTest {
-    function test_setPrevBaseFee_succeeds() external {
-        setPrevBaseFee(vm, address(optimismPortal2), 100 gwei);
-        (uint128 prevBaseFee,, uint64 prevBlockNum) = optimismPortal2.params();
-        assertEq(uint256(prevBaseFee), 100 gwei);
+contract SetPrevUnstableFee_Test is CommonTest {
+    function test_setPrevUnstableFee_succeeds() external {
+        setPrevUnstableFee(vm, address(optimismPortal2), 100 gwei);
+        (uint128 prevUnstableFee,, uint64 prevBlockNum) = optimismPortal2.params();
+        assertEq(uint256(prevUnstableFee), 100 gwei);
         assertEq(uint256(prevBlockNum), block.number);
     }
 }

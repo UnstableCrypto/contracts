@@ -160,8 +160,8 @@ contract DeployConfig is Script {
         operatorFeeVaultWithdrawalNetwork = stdJson.readUint(_json, "$.operatorFeeVaultWithdrawalNetwork");
         governanceTokenOwner = stdJson.readAddress(_json, "$.governanceTokenOwner");
         l2GenesisBlockGasLimit = stdJson.readUint(_json, "$.l2GenesisBlockGasLimit");
-        basefeeScalar = uint32(_readOr(_json, "$.gasPriceOracleBaseFeeScalar", 1368));
-        blobbasefeeScalar = uint32(_readOr(_json, "$.gasPriceOracleBlobBaseFeeScalar", 810949));
+        basefeeScalar = uint32(_readOr(_json, "$.gasPriceOracleUnstableFeeScalar", 1368));
+        blobbasefeeScalar = uint32(_readOr(_json, "$.gasPriceOracleBlobUnstableFeeScalar", 810949));
 
         enableGovernance = _readOr(_json, "$.enableGovernance", false);
         systemConfigStartBlock = stdJson.readUint(_json, "$.systemConfigStartBlock");
@@ -300,7 +300,7 @@ contract DeployConfig is Script {
     }
 
     /// @notice Allow the `baseFeeVaultWithdrawalNetwork` config to be overridden in testing environments
-    function setBaseFeeVaultWithdrawalNetwork(uint256 _baseFeeVaultWithdrawalNetwork) public {
+    function setUnstableFeeVaultWithdrawalNetwork(uint256 _baseFeeVaultWithdrawalNetwork) public {
         baseFeeVaultWithdrawalNetwork = _baseFeeVaultWithdrawalNetwork;
     }
 

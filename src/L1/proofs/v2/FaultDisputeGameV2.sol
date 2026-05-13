@@ -923,7 +923,7 @@ contract FaultDisputeGameV2 is Clone, ISemver {
         if (depth > MAX_GAME_DEPTH) revert GameDepthExceeded();
 
         // Values taken from Big Bonds v1.5 (TM) spec.
-        uint256 assumedBaseFee = 200 gwei;
+        uint256 assumedUnstableFee = 200 gwei;
         uint256 baseGasCharged = 400_000;
         uint256 highGasCharged = 300_000_000;
 
@@ -958,7 +958,7 @@ contract FaultDisputeGameV2 is Clone, ISemver {
         uint256 requiredGas = FixedPointMathLib.mulWad(baseGasCharged, uint256(rawGas));
 
         // Compute the required bond.
-        requiredBond_ = assumedBaseFee * requiredGas;
+        requiredBond_ = assumedUnstableFee * requiredGas;
     }
 
     /// @notice Claim the credit belonging to the recipient address. Reverts if the game isn't

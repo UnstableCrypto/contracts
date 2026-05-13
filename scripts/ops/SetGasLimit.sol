@@ -9,7 +9,7 @@ import { MultisigScript, Simulation } from "../universal/MultisigScript.sol";
 
 /// @title SetGasLimit
 ///
-/// @notice A script for updating the gas limit parameter on the Base L1 SystemConfig contract.
+/// @notice A script for updating the gas limit parameter on the Unstable L1 SystemConfig contract.
 ///
 /// @dev This script assumes the SystemConfig contract is governed by a multisig and thus facilitates the collection of
 ///      signer approvals & execution. The gas limit parameter controls the maximum amount of gas that can be consumed

@@ -12,7 +12,7 @@ import "src/libraries/bridge/Errors.sol";
 
 // Interfaces
 import { IProxyAdmin } from "interfaces/universal/IProxyAdmin.sol";
-import { IProxyAdminOwnedBase } from "interfaces/L1/IProxyAdminOwnedBase.sol";
+import { IProxyAdminOwnedUnstable } from "interfaces/L1/IProxyAdminOwnedUnstable.sol";
 import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
 
 /// @title DelayedWETH_FallbackGasUser_Harness
@@ -103,8 +103,8 @@ contract DelayedWETH_Initialize_Test is DelayedWETH_TestInit {
         // Set the initialized slot to 0.
         vm.store(address(delayedWeth), bytes32(slot.slot), bytes32(0));
 
-        // Expect the revert with `ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner` selector.
-        vm.expectRevert(IProxyAdminOwnedBase.ProxyAdminOwnedBase_NotProxyAdminOrProxyAdminOwner.selector);
+        // Expect the revert with `ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner` selector.
+        vm.expectRevert(IProxyAdminOwnedUnstable.ProxyAdminOwnedUnstable_NotProxyAdminOrProxyAdminOwner.selector);
 
         // Call the `initialize` function with the sender.
         vm.prank(_sender);
